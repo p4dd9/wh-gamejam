@@ -1,15 +1,9 @@
 # AirConsole Boilerplate
 
-## Stack
-
-- JavaScript
+- TypeScript
 - CSS
-
 - PhaserJS
 - AirConsole
-
-## Setup
-
 - NodeJS
 - NPM
 

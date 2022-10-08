@@ -5,8 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin')
 module.exports = {
 	mode: 'development',
 	entry: {
-		controller: './app/js/controller/controller.js',
-		screen: './app/js/screen/screen.js',
+		controller: './app/ts/controller/controller.ts',
+		screen: './app/ts/screen/screen.ts',
 	},
 	output: {
 		filename: 'assets/[name].bundle.js',
@@ -22,6 +22,11 @@ module.exports = {
 			{
 				test: /\.(woff|woff2|eot|ttf|otf)$/i,
 				type: 'asset/resource',
+			},
+			{
+				test: /\.ts?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
 			},
 		],
 	},
@@ -46,6 +51,9 @@ module.exports = {
 			],
 		}),
 	],
+	resolve: {
+		extensions: ['.ts'],
+	},
 	devServer: {
 		static: {
 			directory: path.join(__dirname, 'dist'),
