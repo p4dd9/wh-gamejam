@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AirConsole | PhaserJS | Boilerplate",
   "author": "Patrick Obermüller",
-  "license": "ISC",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "build": "npx webpack",
