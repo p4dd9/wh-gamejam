@@ -11,12 +11,17 @@ module.exports = {
 	output: {
 		filename: 'assets/[name].bundle.js',
 		path: path.resolve(__dirname, 'dist'),
+		assetModuleFilename: 'assets/[name][ext]',
 	},
 	module: {
 		rules: [
 			{
 				test: /\.css$/i,
 				use: ['style-loader', 'css-loader'],
+			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf)$/i,
+				type: 'asset/resource',
 			},
 		],
 	},
