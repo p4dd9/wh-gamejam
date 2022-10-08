@@ -46,13 +46,13 @@ module.exports = {
 				{
 					from: '**/*',
 					to: 'assets',
-					context: path.resolve(__dirname, 'app/img/'),
+					context: path.resolve(__dirname, 'app/media/'),
 				},
 			],
 		}),
 	],
 	resolve: {
-		extensions: ['.ts'],
+		extensions: ['.ts', '.js'],
 	},
 	devServer: {
 		static: {

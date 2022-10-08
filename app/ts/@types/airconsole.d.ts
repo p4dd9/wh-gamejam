@@ -1,4 +1,8 @@
-// https://github.com/FieryCod/airconsole-typescript
+/**
+ * https://github.com/FieryCod/airconsole-typescript
+ * It is assumed, that some of those typings are outdated.
+ * Best bet so far ..
+ */
 
 declare global {
 	namespace AirConsoleStates {

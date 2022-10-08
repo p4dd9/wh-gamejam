@@ -1,5 +1,9 @@
+/**
+ * This CSS import ensures <style> tags are added
+ * to the <head> of the document.
+ */
 import '../../css/screen.css'
+import { PhaserGame } from './game/Game'
 
 const airconsole = new AirConsole()
-console.log('screen.js')
-console.log(airconsole)
+const phaserGame = new PhaserGame(airconsole)
