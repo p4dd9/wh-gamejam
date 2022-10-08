@@ -1,0 +1,5 @@
+h1 {
+    font-size: 12px;
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+}
