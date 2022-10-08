@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
 	mode: 'development',
@@ -29,6 +30,15 @@ module.exports = {
 			filename: 'controller.html',
 			template: 'app/html/controller.html',
 			chunks: ['controller'],
+		}),
+		new CopyPlugin({
+			patterns: [
+				{
+					from: '**/*',
+					to: 'assets',
+					context: path.resolve(__dirname, 'app/img/'),
+				},
+			],
 		}),
 	],
 }
