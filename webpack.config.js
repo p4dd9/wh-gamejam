@@ -9,7 +9,7 @@ module.exports = {
 		screen: './app/js/screen/screen.js',
 	},
 	output: {
-		filename: 'assets/[name].[contenthash].bundle.js',
+		filename: 'assets/[name].bundle.js',
 		path: path.resolve(__dirname, 'dist'),
 	},
 	module: {
