@@ -1,0 +1,21 @@
+{
+  "name": "airconsole-boilerplate",
+  "version": "1.0.0",
+  "description": "AirConsole | PhaserJS | Boilerplate",
+  "author": "Patrick Obermüller",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/p4dd9/airconsole-boilerplate.git"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "prettier": "^2.7.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
