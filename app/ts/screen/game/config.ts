@@ -9,7 +9,13 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
 		mode: Phaser.Scale.RESIZE,
 	},
 	backgroundColor: '#00AEDC',
-	physics: {},
+	physics: {
+		default: 'arcade',
+		arcade: {
+			gravity: { y: 100 },
+			debug: true,
+		},
+	},
 	scene: [GameScene],
 	plugins: {
 		global: [
