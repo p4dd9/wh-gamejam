@@ -1,28 +1,22 @@
 import Phaser from 'phaser'
 import { GameScene } from './scenes/GameScene'
 import WebFontLoaderPlugin from 'phaser3-rex-plugins/plugins/webfontloader-plugin.js'
-import {LobbyScene} from "./scenes/LobbyScene";
 
-export const gameConfig = {
+export const gameConfig: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
 	scale: {
 		parent: 'game',
-		height: 300,
-		with: 500,
-		mode: Phaser.Scale.CENTER_BOTH,
+		mode: Phaser.Scale.RESIZE,
 	},
+	backgroundColor: '#00AEDC',
 	physics: {
-		// default: 'arcade',
-		// arcade: {
-		// 		debug: false,
-		// 		enabled: true,
-		// 		gravity: { y: 1000 },
-		// 		showBody: true,
-		// 		showStaticBody: true,
-		// 		debugBodyColor: 0xff00ff,
-		// },
+		default: 'arcade',
+		arcade: {
+			gravity: { y: 100 },
+			debug: true,
+		},
 	},
-	scene: [GameScene, LobbyScene],
+	scene: [GameScene],
 	plugins: {
 		global: [
 			{
@@ -36,5 +30,4 @@ export const gameConfig = {
 
 export const SCENES = {
 	GAME: 'GameScene',
-	LOBBY: 'LobbyScene',
 }

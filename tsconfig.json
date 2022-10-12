@@ -4,6 +4,7 @@
 		"strict": true,
 		"target": "ES5",
 		"module": "ES2015",
+		"lib": ["DOM"],
 		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true,
 		"allowJs": true
