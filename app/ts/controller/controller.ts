@@ -51,12 +51,12 @@ airconsole.onMessage = function (from, data) {
 * Tells the screen to move the player to the left.
 */
 function moveLeft() {
-	airconsole.message(AirConsole.SCREEN, {move: 'left'})
+	airconsole.message(AirConsole.SCREEN, {MOVE: 'left'})
 }
 
 /**
 * Tells the screen to move the player to the right.
 */
 function moveRight() {
-	airconsole.message(AirConsole.SCREEN, {move: 'right'})
+	airconsole.message(AirConsole.SCREEN, {MOVE: 'right'})
 }
