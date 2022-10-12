@@ -1,12 +1,109 @@
-<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>Controller</title>
-		<script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.8.0.js"></script>
-	</head>
-	<body>
-		<h1>Controller</h1>
-		<img src="assets/airconsole.png" alt="AirConsole Logo" />
-	</body>
+<head>
+  <script type="text/javascript"
+          src="https://www.airconsole.com/api/airconsole-1.3.0.js"></script>
+  <script type="text/javascript">
+    navigator.vibrate = (navigator.vibrate ||
+                         navigator.webkitVibrate ||
+                         navigator.mozVibrate ||
+                         navigator.msVibrate);
+
+    var airconsole;
+    /**
+     * Sets up the communication to the screen.
+     */
+    function init() {
+      airconsole = new AirConsole({"orientation": "landscape"});
+
+      /*
+       * Checks if this device is part of the active game.
+       */
+      airconsole.onActivePlayersChange = function(player) {
+        var div = document.getElementById("player_id");
+        if (player !== undefined) {
+          div.innerHTML =  (["Left Player", "Right Player"][player]);
+        } else {
+          div.innerHTML = "It's a 2 player game!";
+        }
+      };
+
+      /*
+       * Makes the device vibrate if the screen says so.
+       */
+      airconsole.onMessage = function(from, data) {
+        if (from == AirConsole.SCREEN && data.vibrate) {
+          navigator.vibrate(data.vibrate);
+          console.log("Vibrating: " + data.vibrate);
+        }
+      };
+    }
+
+    /**
+     * Tells the screen to move the player to the left.
+     */
+    function moveLeft() {
+      airconsole.message(AirConsole.SCREEN, {move: 'left'})
+    }
+
+    /**
+     * Tells the screen to move the player to the right.
+     */
+    function moveRight() {
+      airconsole.message(AirConsole.SCREEN, {move: 'right'})
+    }
+
+  </script>
+  <style type="text/css">
+    @font-face {
+      font-family: 'PressStart2P';
+      src: url('PressStart2P.ttf') format('truetype');
+      text-align: center;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0px;
+      font-family: 'PressStart2P', sans-serif;
+      color: white;
+      text-align: center;
+      background-color: black;
+    }
+
+    .button {
+      display: inline-block;
+      height: 98%;
+      width: 45%;
+      background-color: #222;
+      position: relative;
+    }
+
+    .button_label {
+      position: absolute;
+      top: 0px;
+      height: 100%;
+      left: 50%;
+      margin-top: -6px;
+    }
+
+    #player_id {
+      position: absolute;
+      top: 50%;
+      top: 0%;
+      width: 100%;
+      margin-top: -8px;
+      color: #777;
+    }
+  </style>
+<script defer src="assets/controller.bundle.js"></script></head>
+<body onload="init()">
+<div style="height: 1%"></div>
+<div class=button ontouchstart="moveLeft()" onmousedown="moveLeft()">
+  <div class="button_label">LEFT</div>
+</div>
+<div style="height: 8%"></div>
+<div class=button ontouchstart="moveRight()" onmousedown="moveRight()">
+  <div class="button_label">RIGHT</div>
+</div>
+<div id="player_id">It's a x player game</div>
+</body>
 </html>
