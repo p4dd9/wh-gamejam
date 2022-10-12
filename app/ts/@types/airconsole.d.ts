@@ -4,6 +4,8 @@
  * Best bet so far ..
  */
 
+import { PlayerInputs } from "../shared/common"
+
 declare global {
 	namespace AirConsoleStates {
 		/**
@@ -160,7 +162,7 @@ declare global {
 		 * @param {any} data
 		 * @memberOf AirConsole
 		 */
-		message(device_id: number | undefined, data: any): void
+		message(device_id: number | undefined, data: PlayerInputs): void
 
 		/**
 		 * Gets called when a message is received from another device that called message() or broadcast().
