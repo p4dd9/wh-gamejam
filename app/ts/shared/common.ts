@@ -1,5 +1,6 @@
 export interface PlayerInputs {
 	MOVE: 'left' | 'right'
+	START?: boolean
 }
 
 export type Character = 'toucan' | 'flamingo' | 'unicorn' | 'duck'

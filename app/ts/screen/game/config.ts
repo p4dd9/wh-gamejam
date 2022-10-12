@@ -1,9 +1,8 @@
 import Phaser from 'phaser'
 import { GameScene } from './scenes/GameScene'
 import WebFontLoaderPlugin from 'phaser3-rex-plugins/plugins/webfontloader-plugin.js'
-import { LobbyScene } from './scenes/LobbyScene'
 
-export const gameConfig = {
+export const gameConfig: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
 	scale: {
 		parent: 'game',
@@ -11,7 +10,7 @@ export const gameConfig = {
 	},
 	backgroundColor: '#00AEDC',
 	physics: {},
-	scene: [LobbyScene, GameScene],
+	scene: [GameScene],
 	plugins: {
 		global: [
 			{
@@ -25,5 +24,4 @@ export const gameConfig = {
 
 export const SCENES = {
 	GAME: 'GameScene',
-	LOBBY: 'LobbyScene',
 }

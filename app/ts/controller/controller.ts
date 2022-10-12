@@ -3,6 +3,7 @@
  * to the <head> of the document.
  */
 import '../../css/controller.css'
+import { LobbyAction } from '../shared/common'
 
 const airconsole = new AirConsole()
 airconsole.setOrientation(AirConsole.ORIENTATION_LANDSCAPE)
@@ -32,10 +33,10 @@ function moveLeft() {
  * Tells the screen to move the player to the right.
  */
 function moveRight() {
-	airconsole.message(AirConsole.SCREEN, { MOVE: 'right' })
+	airconsole.message(AirConsole.SCREEN, { MOVE: 'right', START: true })
 }
 
-airconsole.onMessage = (from, data) => {
+airconsole.onMessage = (from, data: LobbyAction) => {
 	if (data.joinedState) {
 		if (data.joinedState === 'success' && data.character) {
 			switch (data.character.toLowerCase()) {
@@ -57,7 +58,6 @@ airconsole.onMessage = (from, data) => {
 					break
 				}
 			}
-		} else {
 		}
 	}
 }

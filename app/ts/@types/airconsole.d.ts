@@ -174,7 +174,7 @@ declare global {
 		 * @param {*} data
 		 * @memberOf AirConsole
 		 */
-		onMessage(device_id: number, data: LobbyAction): void
+		onMessage(device_id: number, data: PlayerInputs | LobbyAction): void
 		// MESSAGES ENDS //
 
 		// DEVICE STATE //
