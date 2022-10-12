@@ -61,3 +61,21 @@ airconsole.onMessage = (from, data: LobbyAction) => {
 		}
 	}
 }
+
+airconsole.onConnect = function (device_id) {
+	let startButton = <HTMLElement>document.body.querySelector("#start")
+	showElementOn(device_id === airconsole.getMasterControllerDeviceId(), startButton)
+}
+
+airconsole.onMessage = function (from, data) {
+	let actionButton = <HTMLElement>document.body.querySelector("#action")
+	showElementOn(from == AirConsole.SCREEN && data.isDead, actionButton)
+}
+
+function showElementOn(condition: boolean, element: HTMLElement) {
+	if (condition) {
+		element.style.display = "block"
+	} else {
+		element.style.display = "none"
+	}
+}
