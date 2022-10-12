@@ -29,6 +29,6 @@ export class LobbyScene extends Phaser.Scene {
 
 	create() {
 		this.add.text(20, 20, 'Connecting Device', { font: '64px Courier', color: 'white' })
-
+		this.scene.start(SCENES.GAME)
 	}
 }
