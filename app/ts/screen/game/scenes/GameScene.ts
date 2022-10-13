@@ -14,8 +14,17 @@ import {
 	TOUCAN_SCORE_TEXT,
 	UNICORN_SCORE_TEXT,
 	FLAMINGO_SCORE_TEXT,
+	BOTTOM_RIGHT,
+	BOTTOM_LEFT,
+	TOP_RIGHT,
+	TOP_LEFT,
+	WHALE,
+	TURTLE,
+	DOLPHINE,
+	STONES,
+	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
-	SIMPLE_SCHOKIBON_POINTS,
+	SIMPLE_SCHOKIBON_POINTS
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -48,13 +57,50 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(SCHOKIBON_ITEM_IMAGE, 'assets/schokibon.png')
 
 		this.load.image(BACKGROUND_PATTERN_IMAGE, 'assets/background_water.png')
+
+		this.load.image(BOTTOM_RIGHT, `assets/${BOTTOM_RIGHT}.png`)
+		this.load.image(BOTTOM_LEFT, `assets/${BOTTOM_LEFT}.png`)
+		this.load.image(TOP_RIGHT, `assets/${TOP_RIGHT}.png`)
+		this.load.image(TOP_LEFT, `assets/${TOP_LEFT}.png`)
+
+		this.load.image(WHALE, `assets/${WHALE}.png`)
+		this.load.image(TURTLE, `assets/${TURTLE}.png`)
+		this.load.image(DOLPHINE, `assets/${DOLPHINE}.png`)
+		this.load.image(STONES, `assets/${STONES}.png`)
+
+		
+
+
+
+		/*
+			Loading images for background
+		*/
 	}
+
+	 
 
 	create(airconsole: AirConsole) {
 		const sceneWidth = this.game.canvas.width
 		const sceneHeight = this.game.canvas.height
 
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
+		
+		for(let i = 0, y = 0; i<3; i++){
+			let x = 0; 
+			for(let j = 0; j<12; j++){
+				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9; 
+				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j%3]);
+			}
+			y += this.game.canvas.height / 3; 
+		}
+
+		this.add.image(10, 10, TOP_LEFT).setOrigin(0,0)
+		this.add.image(10,sceneHeight - 175, BOTTOM_LEFT).setOrigin(0,0)
+		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0,0)
+		this.add.image(sceneWidth - 175, sceneHeight-175, BOTTOM_RIGHT).setOrigin(0,0)
+
+
+
 
 		const flamingo = this.initCharacter('flamingo')
 		const duck = this.initCharacter('duck')
