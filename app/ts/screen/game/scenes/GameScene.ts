@@ -63,46 +63,7 @@ export class GameScene extends Phaser.Scene {
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
 
 		this.physics.add.collider(characters, this.donuts, (character, donut) => {
-			donut.destroy()
-			this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
-
-			this.time.addEvent({
-				delay: 5000,
-				callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
-				loop: false,
-			})
-
-			switch (character.name as Character) {
-				case 'toucan': {
-					const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Toucan: ' + newText)
-
-					break
-				}
-				case 'duck': {
-					const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Duck: ' + newText)
-					break
-				}
-				case 'flamingo': {
-					const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Flamingo: ' + newText)
-					break
-				}
-				case 'unicorn': {
-					const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Unicorn: ' + newText)
-					break
-				}
-			}
+			this.handleDonutCharacterCollisions(donut, character)
 		})
 
 		airconsole.onConnect = function (device_id) {
@@ -235,11 +196,18 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	handleDonutCharacterCollion(
+	handleDonutCharacterCollisions(
 		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
 		donut.destroy()
+		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
+
+		this.time.addEvent({
+			delay: 5000,
+			callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
+			loop: false,
+		})
 		this.updateScore(character.name as Character)
 	}
 
