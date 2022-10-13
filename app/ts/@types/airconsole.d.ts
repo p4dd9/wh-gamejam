@@ -4,7 +4,7 @@
  * Best bet so far ..
  */
 
-import { LobbyAction, PlayerInputs } from '../shared/common'
+import { GameUpdates, PlayerInputs } from '../shared/common'
 
 declare global {
 	namespace AirConsoleStates {
@@ -162,7 +162,7 @@ declare global {
 		 * @param {any} data
 		 * @memberOf AirConsole
 		 */
-		message(device_id: number | undefined, data: PlayerInputs | LobbyAction): void
+		message(device_id: number | undefined, data: PlayerInputs | GameUpdates): void
 
 		/**
 		 * Gets called when a message is received from another device that called message() or broadcast().
@@ -174,7 +174,7 @@ declare global {
 		 * @param {*} data
 		 * @memberOf AirConsole
 		 */
-		onMessage(device_id: number, data: PlayerInputs | LobbyAction): void
+		onMessage(device_id: number, data: PlayerInputs | GameUpdates): void
 		// MESSAGES ENDS //
 
 		// DEVICE STATE //

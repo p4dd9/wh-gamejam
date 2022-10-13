@@ -27,3 +27,8 @@ export const FLAMINGO_CHARACTER = 'flamingo'
 export const TOUCAN_CHARACTER = 'toucan'
 export const UNICORN_CHARACTER = 'unicorn'
 export const DUCK_CHARACTER = 'duck'
+
+/**
+ * Config
+ */
+export const MAX_PLAYER = 4
