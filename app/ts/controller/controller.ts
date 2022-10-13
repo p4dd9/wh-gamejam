@@ -3,7 +3,8 @@
  * to the <head> of the document.
  */
 import '../../css/controller.css'
-import { LobbyAction } from '../shared/common'
+import {GameUpdates} from '../shared/common'
+import {MAX_PLAYER} from "../screen/consts";
 
 const airconsole = new AirConsole()
 airconsole.setOrientation(AirConsole.ORIENTATION_LANDSCAPE)
@@ -22,22 +23,54 @@ rightButton.addEventListener('click', () => {
 	moveRight()
 })
 
+let startButton = <HTMLElement>document.body.querySelector('#start')
+startButton.addEventListener('click', () => {
+	if (airconsole.getControllerDeviceIds().length != MAX_PLAYER) {
+		alert("You need 4 players to start the game")
+	} else {
+		startGame()
+	}
+})
+
 /**
  * Tells the screen to move the player to the left.
  */
 function moveLeft() {
-	airconsole.message(AirConsole.SCREEN, { MOVE: 'left' })
+	airconsole.message(AirConsole.SCREEN, {MOVE: 'left', START: false})
 }
 
 /**
  * Tells the screen to move the player to the right.
  */
 function moveRight() {
-	airconsole.message(AirConsole.SCREEN, { MOVE: 'right', START: true })
+	airconsole.message(AirConsole.SCREEN, {MOVE: 'right', START: false})
 }
 
-airconsole.onMessage = (from, data: LobbyAction) => {
+/**
+ * Tells the game to start.
+ */
+function startGame() {
+	airconsole.message(AirConsole.SCREEN, {MOVE: 'none', START: true})
+}
+
+airconsole.onMessage = (from, data: GameUpdates) => {
 	if (data.joinedState) {
+		if (data.joinedState) {
+			if (data.gameState) {
+				let startButton = <HTMLElement>document.body.querySelector("#start")
+				switch (data.gameState) {
+					case "game": {
+						showElementOn(false, startButton)
+						break;
+					}
+					default:
+					case "lobby": {
+						alert(airconsole.getMasterControllerDeviceId())
+						showElementOn(airconsole.getDeviceId() == airconsole.getMasterControllerDeviceId(), startButton)
+					}
+				}
+			}
+		}
 		if (data.joinedState === 'success' && data.character) {
 			switch (data.character.toLowerCase()) {
 				case 'toucan': {
@@ -64,30 +97,7 @@ airconsole.onMessage = (from, data: LobbyAction) => {
 
 airconsole.onConnect = function (device_id) {
 	let startButton = <HTMLElement>document.body.querySelector("#start")
-	showElementOn(device_id === airconsole.getMasterControllerDeviceId(), startButton)
-}
-
-airconsole.onMessage = function (from, data) {
-	let actionButton = <HTMLElement>document.body.querySelector("#action")
-	showElementOn(from == AirConsole.SCREEN && data.isDead, actionButton)
-}
-
-function showElementOn(condition: boolean, element: HTMLElement) {
-	if (condition) {
-		element.style.display = "block"
-	} else {
-		element.style.display = "none"
-	}
-}
-
-airconsole.onConnect = function (device_id) {
-	let startButton = <HTMLElement>document.body.querySelector("#start")
-	showElementOn(device_id === airconsole.getMasterControllerDeviceId(), startButton)
-}
-
-airconsole.onMessage = function (from, data) {
-	let actionButton = <HTMLElement>document.body.querySelector("#action")
-	showElementOn(from == AirConsole.SCREEN && data.isDead, actionButton)
+	showElementOn(airconsole.getDeviceId() == airconsole.getMasterControllerDeviceId(), startButton)
 }
 
 function showElementOn(condition: boolean, element: HTMLElement) {

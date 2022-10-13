@@ -123,6 +123,7 @@ body {
 }
 
 .center {
+	display: none;
 	width: 40%;
 	height: 80px;
 }
