@@ -1,4 +1,4 @@
-import { Character, PlayerInputs } from '../../../shared/common'
+import { Character, PlayerInputs, Score } from '../../../shared/common'
 import {
 	FLAMINGO_CHARACTER_IMAGE,
 	TOUCAN_CHARACTER_IMAGE,
@@ -15,7 +15,7 @@ import {
 	UNICORN_SCORE_TEXT,
 	FLAMINGO_SCORE_TEXT,
 } from '../../consts'
-import { gameConfig, SCENES } from '../config'
+import { SCENES } from '../config'
 
 export class GameScene extends Phaser.Scene {
 	private donuts: Phaser.GameObjects.Group | null = null
@@ -96,6 +96,33 @@ export class GameScene extends Phaser.Scene {
 				this.start(airconsole)
 			}
 		}
+	}
+
+	onGameEnd() {
+		const flamingoScore = {
+			character: FLAMINGO_CHARACTER,
+			score: this.children.getByName(FLAMINGO_SCORE_TEXT)?.getData('score') as number,
+		}
+		const toucanScore = {
+			character: TOUCAN_CHARACTER,
+			score: this.children.getByName(TOUCAN_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const unicornScore = {
+			character: UNICORN_CHARACTER,
+			score: this.children.getByName(UNICORN_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const duckScore = {
+			character: DUCK_CHARACTER,
+			score: this.children.getByName(DUCK_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const scores: Score[] = [flamingoScore, toucanScore, unicornScore, duckScore]
+			.sort((a, b) => a.score - b.score)
+			.reverse()
+
+		alert(`${scores[0].character} won with ${scores[0].score}`)
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -293,6 +320,11 @@ export class GameScene extends Phaser.Scene {
 	start(airconsole: AirConsole) {
 		this.setStartCharacterPosition()
 		this.drawScores()
+
+		this.time.addEvent({
+			delay: 180000, // 180000 3 min
+			callback: () => this.onGameEnd(),
+		})
 
 		this.time.addEvent({
 			delay: 3500,
