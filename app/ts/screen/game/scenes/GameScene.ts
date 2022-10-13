@@ -57,6 +57,50 @@ export class GameScene extends Phaser.Scene {
 		const unicorn = this.initCharacter('unicorn')
 		const toucan = this.initCharacter('toucan')
 
+		flamingo.body.world.on('worldbounds',
+			(body: Phaser.Physics.Arcade.Body) => {
+				// Check if the body's game object is the sprite you are listening for
+				if (body.gameObject === flamingo) {
+					// update physics
+					flamingo.setAngularVelocity(this.getRandomAngularVelocity())
+					flamingo.body.velocity.x -= 300
+				}
+			},
+			flamingo)
+
+		duck.body.world.on('worldbounds',
+			(body: Phaser.Physics.Arcade.Body) => {
+				// Check if the body's game object is the sprite you are listening for
+				if (body.gameObject === duck) {
+					// update physics
+					duck.setAngularVelocity(this.getRandomAngularVelocity())
+					duck.body.velocity.x -= 300
+				}
+			},
+			duck)
+
+		unicorn.body.world.on('worldbounds',
+			(body: Phaser.Physics.Arcade.Body) => {
+				// Check if the body's game object is the sprite you are listening for
+				if (body.gameObject === unicorn) {
+					// update physics
+					unicorn.setAngularVelocity(this.getRandomAngularVelocity())
+					unicorn.body.velocity.x -= 300
+				}
+			},
+			unicorn)
+
+		toucan.body.world.on('worldbounds',
+			(body: Phaser.Physics.Arcade.Body) => {
+				// Check if the body's game object is the sprite you are listening for
+				if (body.gameObject === toucan) {
+					// update physics
+					toucan.setAngularVelocity(this.getRandomAngularVelocity())
+					toucan.body.velocity.x -= 300
+				}
+			},
+			toucan)
+
 		const characters = this.add.group([flamingo, unicorn, duck, toucan])
 		this.donuts = this.add.group()
 
@@ -101,59 +145,62 @@ export class GameScene extends Phaser.Scene {
 
 		const sceneHorizontalCenter = sceneWidth / 2
 		const sceneVerticalCenter = sceneHeight / 2
-
 		switch (character) {
 			case 'duck': {
-				return this.physics.add
+				const duck = this.physics.add
 					.sprite(sceneHorizontalCenter + 100, sceneVerticalCenter, DUCK_CHARACTER_IMAGE)
 					.setScale(0.5)
 					.setName(DUCK_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
 					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+
+				return duck
 			}
 			case 'flamingo': {
-				return this.physics.add
+				const flamingo = this.physics.add
 					.sprite(sceneHorizontalCenter - 300, sceneVerticalCenter, FLAMINGO_CHARACTER_IMAGE)
 					.setScale(0.5)
 					.setName(FLAMINGO_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
 					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+
+				return flamingo
 			}
 			case 'unicorn': {
-				return this.physics.add
+				const unicorn =  this.physics.add
 					.sprite(sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN_CHARACTER_IMAGE)
 					.setScale(0.5)
 					.setName(UNICORN_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
 					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+
+				return unicorn
 			}
 			case 'toucan': {
-				return this.physics.add
+				const toucan = this.physics.add
 					.sprite(sceneHorizontalCenter + 300, sceneVerticalCenter, TOUCAN_CHARACTER_IMAGE)
 					.setScale(0.5)
 					.setName(TOUCAN_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
 					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+
+				return toucan
 			}
 		}
 	}
