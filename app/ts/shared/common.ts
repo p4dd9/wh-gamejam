@@ -13,4 +13,5 @@ export interface GameUpdates {
 export interface Score {
 	character: string
 	score: number
+	color: string
 }
