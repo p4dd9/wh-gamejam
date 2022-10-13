@@ -25,7 +25,7 @@ rightButton.addEventListener('click', () => {
 
 let startButton = <HTMLElement>document.body.querySelector('#start')
 startButton.addEventListener('click', () => {
-	if (airconsole.getControllerDeviceIds().length != MAX_PLAYER) {
+	if (airconsole.getControllerDeviceIds().length < MAX_PLAYER) {
 		alert("You need 4 players to start the game")
 	} else {
 		startGame()
