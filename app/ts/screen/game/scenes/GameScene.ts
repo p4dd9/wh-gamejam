@@ -321,34 +321,36 @@ export class GameScene extends Phaser.Scene {
 			.text(50, 50, 'Flamingo: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
-				color: '#FFFFFF',
+				color: '#fa6493',
 				align: 'left',
 			})
 			.setName(FLAMINGO_SCORE_TEXT)
 			.setData('score', 0)
 			.setResolution(3)
 		this.add
-			.text(50, 150, 'Duck: 0', {
+			.text(50, this.game.canvas.height-50, 'Duck: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
-				color: '#FFFFFF',
+				color: '#f5e93c',
 				align: 'left',
 			})
 			.setName(DUCK_SCORE_TEXT)
 			.setData('score', 0)
+			.setOrigin(0, 1)
 			.setResolution(3)
 		this.add
-			.text(50, 250, 'Toucan: 0', {
+			.text(this.game.canvas.width-50, 50, 'Toucan: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
-				color: '#FFFFFF',
+				color: '#414545',
 				align: 'left',
 			})
 			.setName(TOUCAN_SCORE_TEXT)
 			.setData('score', 0)
+			.setOrigin(1, 0)
 			.setResolution(3)
 		this.add
-			.text(50, 350, 'Unicorn: 0', {
+			.text(this.game.canvas.width-50, this.game.canvas.height-50, 'Unicorn: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
@@ -356,6 +358,7 @@ export class GameScene extends Phaser.Scene {
 			})
 			.setName(UNICORN_SCORE_TEXT)
 			.setData('score', 0)
+			.setOrigin(1, 1)
 			.setResolution(3)
 	}
 
