@@ -61,7 +61,7 @@ export class GameScene extends Phaser.Scene {
 		this.donuts = this.add.group()
 
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
-		this.physics.add.collider(characters, this.donuts, this.handleDonutCharacterCollion)
+		this.physics.add.collider(characters, this.donuts, (char, donut) => this.handleDonutCharacterCollion(donut, char))
 
 		airconsole.onConnect = (device_id) => {
 			for (const character of this.playerCharacters) {
@@ -69,13 +69,23 @@ export class GameScene extends Phaser.Scene {
 					character.setData('assigned', {
 						player: device_id,
 					})
-					character.setScale(2)
+					character.setVisible(true)
 
 					airconsole.message(device_id, { joinedState: 'success', character: character.name as Character })
 					return
 				}
 			}
 			airconsole.message(device_id, { joinedState: 'full' })
+		}
+
+		airconsole.onDisconnect = (device_id) => {
+			for (const character of this.playerCharacters) {
+				if (character.getData('assigned') && character.getData('assigned').player === device_id) {
+					character.setData('assigned', null)
+					character.setVisible(false)
+				}
+			}
+			airconsole.message(device_id, { joinedState: 'disconnected' })
 		}
 
 		airconsole.onMessage = (from, data: PlayerInputs) => {
@@ -102,6 +112,7 @@ export class GameScene extends Phaser.Scene {
 					.setVelocity(0, 0)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
+					.setVisible(false)
 			}
 			case 'flamingo': {
 				return this.physics.add
@@ -112,6 +123,7 @@ export class GameScene extends Phaser.Scene {
 					.setVelocity(0, 0)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
+					.setVisible(false)
 			}
 			case 'unicorn': {
 				return this.physics.add
@@ -122,6 +134,7 @@ export class GameScene extends Phaser.Scene {
 					.setVelocity(0, 0)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
+					.setVisible(false)
 			}
 			case 'toucan': {
 				return this.physics.add
@@ -132,6 +145,7 @@ export class GameScene extends Phaser.Scene {
 					.setVelocity(0, 0)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
+					.setVisible(false)
 			}
 		}
 	}

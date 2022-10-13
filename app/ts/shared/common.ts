@@ -5,6 +5,6 @@ export interface PlayerInputs {
 
 export type Character = 'toucan' | 'flamingo' | 'unicorn' | 'duck'
 export interface LobbyAction {
-	joinedState: 'success' | 'full'
+	joinedState: 'success' | 'full' | 'disconnected'
 	character?: Character
 }
