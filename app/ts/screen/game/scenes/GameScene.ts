@@ -322,8 +322,11 @@ export class GameScene extends Phaser.Scene {
 		let countdownSeconds: number = 0
 
 		if (this.countdown == null) {
+			const sceneWidth = this.game.canvas.width
+			const posX = sceneWidth / 2
+
 			this.countdown = this.add
-				.text(500, 50, 'Countdown', {
+				.text(posX - 50, 50, 'Countdown', {
 					fontFamily: 'Luckiest Guy',
 					fontSize: '48px',
 					color: '#ff0000',
