@@ -14,9 +14,22 @@ import {
 	TOUCAN_SCORE_TEXT,
 	UNICORN_SCORE_TEXT,
 	FLAMINGO_SCORE_TEXT,
+	BOTTOM_RIGHT,
+	BOTTOM_LEFT,
+	TOP_RIGHT,
+	TOP_LEFT,
+	WHALE,
+	TURTLE,
+	DOLPHINE,
+	STONES,
+	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
 	SIMPLE_SCHOKIBON_POINTS,
 	HORSE_ITEM_IMAGE,
+	COUNTDOWN,
+	BACKGROUND_AUDIO,
+	SCHOKIBON_AUDIO,
+	DONUT_AUDIO,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -25,6 +38,7 @@ export class GameScene extends Phaser.Scene {
 	private schokibons: Phaser.GameObjects.Group | null = null
 	private horses: Phaser.GameObjects.Group | null = null
 	private playerCharacters: Phaser.GameObjects.Sprite[] = []
+	private countdown: Phaser.GameObjects.Text | null = null
 
 	constructor() {
 		super({ key: SCENES.GAME })
@@ -51,6 +65,20 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(SCHOKIBON_ITEM_IMAGE, 'assets/schokibon.png')
 
 		this.load.image(BACKGROUND_PATTERN_IMAGE, 'assets/background_water.png')
+
+		this.load.audio(BACKGROUND_AUDIO, 'assets/background_audio.mp3')
+		this.load.audio(SCHOKIBON_AUDIO, 'assets/schokibon_audio.mp3')
+		this.load.audio(DONUT_AUDIO, 'assets/donut_audio.mp3')
+
+		this.load.image(BOTTOM_RIGHT, `assets/${BOTTOM_RIGHT}.png`)
+		this.load.image(BOTTOM_LEFT, `assets/${BOTTOM_LEFT}.png`)
+		this.load.image(TOP_RIGHT, `assets/${TOP_RIGHT}.png`)
+		this.load.image(TOP_LEFT, `assets/${TOP_LEFT}.png`)
+
+		this.load.image(WHALE, `assets/${WHALE}.png`)
+		this.load.image(TURTLE, `assets/${TURTLE}.png`)
+		this.load.image(DOLPHINE, `assets/${DOLPHINE}.png`)
+		this.load.image(STONES, `assets/${STONES}.png`)
 	}
 
 	create(airconsole: AirConsole) {
@@ -58,6 +86,24 @@ export class GameScene extends Phaser.Scene {
 		const sceneHeight = this.game.canvas.height
 
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
+		
+
+		this.sound.play(BACKGROUND_AUDIO)
+
+		for(let i = 0, y = 0; i<3; i++){
+			let x = 0; 
+			for(let j = 0; j<12; j++){
+				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9; 
+				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j%3]);
+			}
+			y += this.game.canvas.height / 3; 
+		}
+
+		this.add.image(10, 10, TOP_LEFT).setOrigin(0,0)
+		this.add.image(10,sceneHeight - 175, BOTTOM_LEFT).setOrigin(0,0)
+		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0,0)
+		this.add.image(sceneWidth - 175, sceneHeight-175, BOTTOM_RIGHT).setOrigin(0,0)
+
 
 		const flamingo = this.initCharacter('flamingo')
 		const duck = this.initCharacter('duck')
@@ -193,7 +239,7 @@ export class GameScene extends Phaser.Scene {
 			.sort((a, b) => a.score - b.score)
 			.reverse()
 
-		alert(`${scores[0].character} won with ${scores[0].score}`)
+		this.drawScoreBoard(scores)
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -314,6 +360,7 @@ export class GameScene extends Phaser.Scene {
 		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(DONUT_AUDIO)
 		donut.destroy()
 		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
 
@@ -329,6 +376,7 @@ export class GameScene extends Phaser.Scene {
 		schokibon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(SCHOKIBON_AUDIO)
 		schokibon.destroy()
 		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
 	}
@@ -383,9 +431,36 @@ export class GameScene extends Phaser.Scene {
 		this.schokibons?.add(schokibon)
 	}
 
+	updateCountdown() {
+		let countdownSeconds: number = 0
+
+		if (this.countdown == null) {
+			this.countdown = this.add
+				.text(500, 50, 'Countdown', {
+					fontFamily: 'Luckiest Guy',
+					fontSize: '48px',
+					color: '#ff0000',
+					align: 'middle',
+				})
+				.setName(COUNTDOWN)
+				.setResolution(3)
+
+			countdownSeconds = 180
+		} else {
+			countdownSeconds = this.countdown.getData('seconds')
+		}
+		
+		if (countdownSeconds > 0) {
+			countdownSeconds--
+		}
+
+		this.countdown.setData('seconds', countdownSeconds)
+		this.countdown.setText('⏱ ' + countdownSeconds)
+	}
+
 	drawScores() {
 		this.add
-			.text(50, 50, 'Flamingo: 0', {
+			.text(70, 70, 'Flamingo: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#fa6493',
@@ -395,7 +470,7 @@ export class GameScene extends Phaser.Scene {
 			.setData('score', 0)
 			.setResolution(3)
 		this.add
-			.text(50, this.game.canvas.height - 50, 'Duck: 0', {
+			.text(70, this.game.canvas.height-70, 'Duck: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#f5e93c',
@@ -406,7 +481,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(0, 1)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width - 50, 50, 'Toucan: 0', {
+			.text(this.game.canvas.width-70, 70, 'Toucan: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#414545',
@@ -417,7 +492,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(1, 0)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width - 50, this.game.canvas.height - 50, 'Unicorn: 0', {
+			.text(this.game.canvas.width-70, this.game.canvas.height-70, 'Unicorn: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
@@ -427,6 +502,44 @@ export class GameScene extends Phaser.Scene {
 			.setData('score', 0)
 			.setOrigin(1, 1)
 			.setResolution(3)
+	}
+
+	drawScoreBoard(scores: Score[]) {
+		this.add
+			.text(600, 50, `HIGHSCORES`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '65px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 150, `${scores[0].character}: ${scores[0].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 200, `${scores[1].character}: ${scores[1].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 250, `${scores[2].character}: ${scores[2].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 300, `${scores[3].character}: ${scores[3].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
 	}
 
 	setStartCharacterPosition() {
@@ -483,6 +596,12 @@ export class GameScene extends Phaser.Scene {
 		this.time.addEvent({
 			delay: 20000,
 			callback: () => this.spawnHorses(),
+      loop: true,
+    })
+    
+    this.time.addEvent({
+			delay: 1000,
+			callback: () => this.updateCountdown(),
 			loop: true,
 		})
 
