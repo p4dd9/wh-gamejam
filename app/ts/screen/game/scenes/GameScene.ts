@@ -453,35 +453,35 @@ export class GameScene extends Phaser.Scene {
 
 	drawScoreBoard(scores: Score[]) {
 		this.add
-			.text(600, 50, `HIGHSCORES`, {
+			.text(this.game.canvas.width/2, 50, `HIGHSCORES`, {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '65px',
 				color: '#FFFFFF',
 				align: 'left',
 			})
 		this.add
-			.text(600, 150, `${scores[0].character}: ${scores[0].score}`, {
+			.text(this.game.canvas.width/2, 150, `${scores[0].character}: ${scores[0].score}`, {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
 				align: 'left',
 			})
 		this.add
-			.text(600, 200, `${scores[1].character}: ${scores[1].score}`, {
+			.text(this.game.canvas.width/2, 200, `${scores[1].character}: ${scores[1].score}`, {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
 				align: 'left',
 			})
 		this.add
-			.text(600, 250, `${scores[2].character}: ${scores[2].score}`, {
+			.text(this.game.canvas.width/2, 250, `${scores[2].character}: ${scores[2].score}`, {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
 				align: 'left',
 			})
 		this.add
-			.text(600, 300, `${scores[3].character}: ${scores[3].score}`, {
+			.text(this.game.canvas.width/2, 300, `${scores[3].character}: ${scores[3].score}`, {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
