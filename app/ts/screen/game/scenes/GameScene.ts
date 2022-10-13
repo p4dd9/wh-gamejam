@@ -119,7 +119,7 @@ export class GameScene extends Phaser.Scene {
 			this.handleSchokibonCharacterCollisions(schokibon, character)
 		})
 
-		airconsole.onConnect = function (device_id) {
+		airconsole.onConnect = (device_id) => {
 			for (const character of characters.getChildren() as Phaser.GameObjects.Sprite[]) {
 				if (!character.getData('assigned')) {
 					character.setData('assigned', {
@@ -127,6 +127,7 @@ export class GameScene extends Phaser.Scene {
 					})
 					character.setVisible(true)
 					character.setActive(true)
+					this.physics.world.enable(character)
 
 					airconsole.message(device_id, { joinedState: 'success', character: character.name as Character })
 					return
@@ -141,6 +142,7 @@ export class GameScene extends Phaser.Scene {
 					character.setData('assigned', null)
 					character.setVisible(false)
 					character.setActive(false)
+					this.physics.world.disable(character)
 				}
 			}
 			airconsole.message(device_id, { joinedState: 'disconnected' })
@@ -209,6 +211,7 @@ export class GameScene extends Phaser.Scene {
 					.setCollideWorldBounds(true)
 					.setVisible(false)
 					.setActive(false)
+					.disableBody(true)
 				return duck
 			}
 			case 'flamingo': {
@@ -223,6 +226,7 @@ export class GameScene extends Phaser.Scene {
 					.setCollideWorldBounds(true)
 					.setVisible(false)
 					.setActive(false)
+					.disableBody(true)
 				return flamingo
 			}
 			case 'unicorn': {
@@ -237,6 +241,7 @@ export class GameScene extends Phaser.Scene {
 					.setCollideWorldBounds(true)
 					.setVisible(false)
 					.setActive(false)
+					.disableBody(true)
 				return unicorn
 			}
 			case 'toucan': {
@@ -251,6 +256,7 @@ export class GameScene extends Phaser.Scene {
 					.setCollideWorldBounds(true)
 					.setVisible(false)
 					.setActive(false)
+					.disableBody(true)
 				return toucan
 			}
 		}
