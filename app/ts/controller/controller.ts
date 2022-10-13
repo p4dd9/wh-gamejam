@@ -53,6 +53,15 @@ function startGame() {
 	airconsole.message(AirConsole.SCREEN, {MOVE: 'none', START: true})
 }
 
+function controllerColorChange(css_class: string) {
+	let leftButton = <HTMLElement>document.body.querySelector(".left");
+	let rightButton = <HTMLElement>document.body.querySelector(".right");
+	if (leftButton && rightButton) {
+		leftButton.classList.add(css_class)
+		rightButton.classList.add(css_class)
+	}
+}
+
 airconsole.onMessage = (from, data: GameUpdates) => {
 	if (data.joinedState) {
 		if (data.joinedState) {
@@ -65,7 +74,6 @@ airconsole.onMessage = (from, data: GameUpdates) => {
 					}
 					default:
 					case "lobby": {
-						alert(airconsole.getMasterControllerDeviceId())
 						showElementOn(airconsole.getDeviceId() == airconsole.getMasterControllerDeviceId(), startButton)
 					}
 				}
@@ -75,19 +83,23 @@ airconsole.onMessage = (from, data: GameUpdates) => {
 			switch (data.character.toLowerCase()) {
 				case 'toucan': {
 					document.body.style.backgroundColor = 'black'
+					controllerColorChange("toucan");
 					break
 				}
 				case 'duck': {
 					document.body.style.backgroundColor = 'yellow'
+					controllerColorChange("duck");
 					break
 				}
 				case 'flamingo': {
 					document.body.style.backgroundColor = 'pink'
+					controllerColorChange("flamingo");
 					break
 				}
 				case 'unicorn': {
 					document.body.style.background =
 						'linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red)'
+					controllerColorChange("unicorn");
 					break
 				}
 			}
