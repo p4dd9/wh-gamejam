@@ -110,6 +110,8 @@ export class GameScene extends Phaser.Scene {
 					.setName(DUCK_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
+					.setAngularVelocity(this.getRandomAngularVelocity())
+					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
@@ -121,6 +123,8 @@ export class GameScene extends Phaser.Scene {
 					.setName(FLAMINGO_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
+					.setAngularVelocity(this.getRandomAngularVelocity())
+					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
@@ -132,6 +136,8 @@ export class GameScene extends Phaser.Scene {
 					.setName(UNICORN_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
+					.setAngularVelocity(this.getRandomAngularVelocity())
+					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
@@ -143,13 +149,18 @@ export class GameScene extends Phaser.Scene {
 					.setName(TOUCAN_CHARACTER)
 					.setData('assigned', null)
 					.setVelocity(0, 0)
+					.setAngularVelocity(this.getRandomAngularVelocity())
+					.setAngularDrag(5)
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
 			}
 		}
 	}
-
+getRandomAngularVelocity(){
+		let velocity = [60,-60]
+		return velocity[Phaser.Math.Between(0,1)]
+}
 	updateScore(characterName: Character) {
 		switch (characterName) {
 			case 'toucan': {
@@ -286,9 +297,9 @@ export class GameScene extends Phaser.Scene {
 			for (const character of this.playerCharacters) {
 				if (character.getData('assigned') && from === character.getData('assigned').player) {
 					if (data.MOVE === 'left') {
-						character.body.velocity.x -= 20
+						character.body.velocity.x -= 150
 					} else if (data.MOVE === 'right') {
-						character.body.velocity.x += 20
+						character.body.velocity.x += 150
 					}
 				}
 			}
