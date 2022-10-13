@@ -23,6 +23,7 @@ export const BACKGROUND_AUDIO = 'backgroundAudio'
  */
 export const SCHOKIBON_AUDIO = 'schokibonAudio'
 export const DONUT_AUDIO = 'donutAudio'
+export const IAD_AUDIO = 'iadAudio'
 
 /**
  * Scores

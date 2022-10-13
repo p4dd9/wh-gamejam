@@ -31,6 +31,7 @@ import {
 	SCHOKIBON_AUDIO,
 	DONUT_AUDIO,
 	IAD_ITEM_IMAGE,
+	IAD_AUDIO,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -72,6 +73,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.audio(BACKGROUND_AUDIO, 'assets/background_audio.mp3')
 		this.load.audio(SCHOKIBON_AUDIO, 'assets/schokibon_audio.mp3')
 		this.load.audio(DONUT_AUDIO, 'assets/donut_audio.mp3')
+		this.load.audio(IAD_AUDIO, 'assets/iad_laugh.mp3')
 
 		this.load.image(BOTTOM_RIGHT, `assets/${BOTTOM_RIGHT}.png`)
 		this.load.image(BOTTOM_LEFT, `assets/${BOTTOM_LEFT}.png`)
@@ -228,6 +230,7 @@ export class GameScene extends Phaser.Scene {
 		iad: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(IAD_AUDIO)
 		iad.destroy()
 		character.body.velocity.x = 25
 		character.body.velocity.y = 0
@@ -262,7 +265,7 @@ export class GameScene extends Phaser.Scene {
 			.reverse()
 
 		this.drawScoreBoard(scores)
-		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: "success", gameState: 'lobby' })
+		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: 'success', gameState: 'lobby' })
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -557,41 +560,36 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	drawScoreBoard(scores: Score[]) {
-		this.add
-			.text(this.game.canvas.width/2-100, 150, `HIGHSCORES`, {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '65px',
-				color: '#FFFFFF',
-				align: 'left',
-			})
-		this.add
-			.text(this.game.canvas.width/2-100, 250, `${scores[0].character}: ${scores[0].score}`, {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: `${scores[0].color}`,
-				align: 'left',
-			})
-		this.add
-			.text(this.game.canvas.width/2-100, 300, `${scores[1].character}: ${scores[1].score}`, {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: `${scores[1].color}`,
-				align: 'left',
-			})
-		this.add
-			.text(this.game.canvas.width/2-100, 350, `${scores[2].character}: ${scores[2].score}`, {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: `${scores[2].color}`,
-				align: 'left',
-			})
-		this.add
-			.text(this.game.canvas.width/2-100, 400, `${scores[3].character}: ${scores[3].score}`, {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: `${scores[3].color}`,
-				align: 'left',
-			})
+		this.add.text(this.game.canvas.width / 2 - 100, 150, `HIGHSCORES`, {
+			fontFamily: 'Luckiest Guy',
+			fontSize: '65px',
+			color: '#FFFFFF',
+			align: 'left',
+		})
+		this.add.text(this.game.canvas.width / 2 - 100, 250, `${scores[0].character}: ${scores[0].score}`, {
+			fontFamily: 'Luckiest Guy',
+			fontSize: '48px',
+			color: `${scores[0].color}`,
+			align: 'left',
+		})
+		this.add.text(this.game.canvas.width / 2 - 100, 300, `${scores[1].character}: ${scores[1].score}`, {
+			fontFamily: 'Luckiest Guy',
+			fontSize: '48px',
+			color: `${scores[1].color}`,
+			align: 'left',
+		})
+		this.add.text(this.game.canvas.width / 2 - 100, 350, `${scores[2].character}: ${scores[2].score}`, {
+			fontFamily: 'Luckiest Guy',
+			fontSize: '48px',
+			color: `${scores[2].color}`,
+			align: 'left',
+		})
+		this.add.text(this.game.canvas.width / 2 - 100, 400, `${scores[3].character}: ${scores[3].score}`, {
+			fontFamily: 'Luckiest Guy',
+			fontSize: '48px',
+			color: `${scores[3].color}`,
+			align: 'left',
+		})
 	}
 
 	setStartCharacterPosition() {
@@ -657,7 +655,7 @@ export class GameScene extends Phaser.Scene {
 			loop: true,
 		})
 
-    this.time.addEvent({
+		this.time.addEvent({
 			delay: 1000,
 			callback: () => this.updateCountdown(),
 			loop: true,
