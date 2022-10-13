@@ -6,6 +6,7 @@ export const TOUCAN_CHARACTER_IMAGE = 'toucanCharacter'
 export const UNICORN_CHARACTER_IMAGE = 'unicornCharacter'
 export const DUCK_CHARACTER_IMAGE = 'duckCharacter'
 
+export const HORSE_ITEM_IMAGE = 'horse'
 export const DONUT_ITEM_IMAGE = 'donut'
 export const SCHOKIBON_ITEM_IMAGE = 'schokibon'
 
