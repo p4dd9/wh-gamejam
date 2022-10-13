@@ -30,6 +30,7 @@ import {
 	BACKGROUND_AUDIO,
 	SCHOKIBON_AUDIO,
 	DONUT_AUDIO,
+	IAD_ITEM_IMAGE,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -39,6 +40,7 @@ export class GameScene extends Phaser.Scene {
 	private horses: Phaser.GameObjects.Group | null = null
 	private playerCharacters: Phaser.GameObjects.Sprite[] = []
 	private countdown: Phaser.GameObjects.Text | null = null
+	private iads: Phaser.GameObjects.Group | null = null
 
 	constructor() {
 		super({ key: SCENES.GAME })
@@ -62,6 +64,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.load.image(HORSE_ITEM_IMAGE, 'assets/horse.png')
 		this.load.image(DONUT_ITEM_IMAGE, 'assets/donut.png')
+		this.load.image(IAD_ITEM_IMAGE, 'assets/iad.png')
 		this.load.image(SCHOKIBON_ITEM_IMAGE, 'assets/schokibon.png')
 
 		this.load.image(BACKGROUND_PATTERN_IMAGE, 'assets/background_water.png')
@@ -86,24 +89,22 @@ export class GameScene extends Phaser.Scene {
 		const sceneHeight = this.game.canvas.height
 
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
-		
 
 		this.sound.play(BACKGROUND_AUDIO)
 
-		for(let i = 0, y = 0; i<3; i++){
-			let x = 0; 
-			for(let j = 0; j<12; j++){
-				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9; 
-				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j%3]);
+		for (let i = 0, y = 0; i < 3; i++) {
+			let x = 0
+			for (let j = 0; j < 12; j++) {
+				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9
+				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j % 3])
 			}
-			y += this.game.canvas.height / 3; 
+			y += this.game.canvas.height / 3
 		}
 
-		this.add.image(10, 10, TOP_LEFT).setOrigin(0,0)
-		this.add.image(10,sceneHeight - 175, BOTTOM_LEFT).setOrigin(0,0)
-		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0,0)
-		this.add.image(sceneWidth - 175, sceneHeight-175, BOTTOM_RIGHT).setOrigin(0,0)
-
+		this.add.image(10, 10, TOP_LEFT).setOrigin(0, 0)
+		this.add.image(10, sceneHeight - 175, BOTTOM_LEFT).setOrigin(0, 0)
+		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0, 0)
+		this.add.image(sceneWidth - 175, sceneHeight - 175, BOTTOM_RIGHT).setOrigin(0, 0)
 
 		const flamingo = this.initCharacter('flamingo')
 		const duck = this.initCharacter('duck')
@@ -166,18 +167,24 @@ export class GameScene extends Phaser.Scene {
 		this.donuts = this.add.group()
 		this.schokibons = this.add.group()
 		this.horses = this.add.group()
+		this.iads = this.add.group()
 
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
 
-		this.physics.add.collider(characters, this.donuts, (character, donut) => {
+		this.physics.add.overlap(characters, this.donuts, (character, donut) => {
 			this.handleDonutCharacterCollisions(donut, character)
 		})
 
-		this.physics.add.collider(characters, this.schokibons, (character, schokibon) => {
+		this.physics.add.overlap(characters, this.schokibons, (character, schokibon) => {
 			this.handleSchokibonCharacterCollisions(schokibon, character)
 		})
 
-    this.physics.add.overlap(characters, this.horses, (character, horse) => {
+		this.physics.add.collider(characters, this.iads, (character, iad) => {
+			this.handleIadCharacterCollision(iad, character)
+			this.updateScore(character.name as Character, -100)
+		})
+
+		this.physics.add.overlap(characters, this.horses, (character, horse) => {
 			this.handleHorseCharacterOverlap(horse, character)
 		})
 
@@ -215,6 +222,15 @@ export class GameScene extends Phaser.Scene {
 				this.start(airconsole)
 			}
 		}
+	}
+
+	handleIadCharacterCollision(
+		iad: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
+	) {
+		iad.destroy()
+		character.body.velocity.x = 25
+		character.body.velocity.y = 0
 	}
 
 	onGameEnd(airconsole: AirConsole) {
@@ -338,30 +354,42 @@ export class GameScene extends Phaser.Scene {
 		switch (characterName) {
 			case 'toucan': {
 				const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Toucan: ' + newText)
+				text.setText('Toucan: ' + newScore)
 				break
 			}
 			case 'duck': {
 				const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Duck: ' + newText)
+				text.setText('Duck: ' + newScore)
 				break
 			}
 			case 'flamingo': {
 				const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Flamingo: ' + newText)
+				text.setText('Flamingo: ' + newScore)
 				break
 			}
 			case 'unicorn': {
 				const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Unicorn: ' + newText)
+				text.setText('Unicorn: ' + newScore)
 				break
 			}
 		}
@@ -398,6 +426,16 @@ export class GameScene extends Phaser.Scene {
 	) {
 		horse.destroy()
 		character.body.velocity.x += 1000
+	}
+
+	spawnIad() {
+		const spawnXpadding = 50
+		const randomXPos = Phaser.Math.Between(spawnXpadding, this.game.canvas.width - spawnXpadding)
+
+		const iad = this.physics.add.sprite(randomXPos, 250, IAD_ITEM_IMAGE).setScale(0.5)
+		iad.setCollideWorldBounds(true)
+
+		this.iads?.add(iad)
 	}
 
 	spawnDonut() {
@@ -484,7 +522,7 @@ export class GameScene extends Phaser.Scene {
 			.setData('score', 0)
 			.setResolution(3)
 		this.add
-			.text(70, this.game.canvas.height-70, 'Duck: 0', {
+			.text(70, this.game.canvas.height - 70, 'Duck: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#f5e93c',
@@ -495,7 +533,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(0, 1)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width-70, 70, 'Toucan: 0', {
+			.text(this.game.canvas.width - 70, 70, 'Toucan: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#414545',
@@ -506,7 +544,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(1, 0)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width-70, this.game.canvas.height-70, 'Unicorn: 0', {
+			.text(this.game.canvas.width - 70, this.game.canvas.height - 70, 'Unicorn: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
@@ -600,6 +638,12 @@ export class GameScene extends Phaser.Scene {
 		})
 
 		this.time.addEvent({
+			delay: 15000,
+			callback: () => this.spawnIad(),
+			loop: true,
+		})
+
+		this.time.addEvent({
 			delay: 2000, // ms
 			callback: () => this.spawnSchokibon(),
 			//args: [],
@@ -610,8 +654,8 @@ export class GameScene extends Phaser.Scene {
 		this.time.addEvent({
 			delay: 20000,
 			callback: () => this.spawnHorses(),
-      loop: true,
-    })
+			loop: true,
+		})
 
     this.time.addEvent({
 			delay: 1000,
