@@ -38,3 +38,8 @@ export const MAX_PLAYER = 4
  * POINTS
  */
 export const SIMPLE_SCHOKIBON_POINTS = 100
+
+/**
+ * Countdown
+ */
+export const COUNTDOWN = 'countdown'
