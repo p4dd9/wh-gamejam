@@ -407,7 +407,7 @@ export class GameScene extends Phaser.Scene {
 
 	drawScores() {
 		this.add
-			.text(50, 50, 'Flamingo: 0', {
+			.text(70, 70, 'Flamingo: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#fa6493',
@@ -417,7 +417,7 @@ export class GameScene extends Phaser.Scene {
 			.setData('score', 0)
 			.setResolution(3)
 		this.add
-			.text(50, this.game.canvas.height-50, 'Duck: 0', {
+			.text(70, this.game.canvas.height-70, 'Duck: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#f5e93c',
@@ -428,7 +428,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(0, 1)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width-50, 50, 'Toucan: 0', {
+			.text(this.game.canvas.width-70, 70, 'Toucan: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#414545',
@@ -439,7 +439,7 @@ export class GameScene extends Phaser.Scene {
 			.setOrigin(1, 0)
 			.setResolution(3)
 		this.add
-			.text(this.game.canvas.width-50, this.game.canvas.height-50, 'Unicorn: 0', {
+			.text(this.game.canvas.width-70, this.game.canvas.height-70, 'Unicorn: 0', {
 				fontFamily: 'Luckiest Guy',
 				fontSize: '48px',
 				color: '#FFFFFF',
