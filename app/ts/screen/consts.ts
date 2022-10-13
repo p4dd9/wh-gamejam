@@ -12,6 +12,17 @@ export const SCHOKIBON_ITEM_IMAGE = 'schokibon'
 export const BACKGROUND_PATTERN_IMAGE = 'backgroundPattern'
 
 /**
+ * Background Music
+ */
+export const BACKGROUND_AUDIO = 'backgroundAudio'
+
+/**
+ * Sounds
+ */
+export const SCHOKIBON_AUDIO = 'schokibonAudio'
+export const DONUT_AUDIO = 'donutAudio'
+
+/**
  * Scores
  */
 
@@ -34,6 +45,22 @@ export const DUCK_CHARACTER = 'duck'
  */
 export const MAX_PLAYER = 4
 
+
+/**
+ * Background enrichment
+ */
+
+export const BOTTOM_RIGHT = 'bottom-right';
+export const BOTTOM_LEFT = 'bottom-left';
+export const TOP_RIGHT = 'top-right';
+export const TOP_LEFT = 'top-left';
+
+export const WHALE = 'whale';
+export const TURTLE = 'turtle';
+export const DOLPHINE = 'dolphine';
+export const STONES = 'stones'; 
+
+export const IMAGE_ARRAY:string [] = new Array(WHALE, TURTLE, DOLPHINE, STONES);
 /**
  * POINTS
  */
