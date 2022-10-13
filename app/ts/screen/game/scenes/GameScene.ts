@@ -181,6 +181,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.physics.add.collider(characters, this.iads, (character, iad) => {
 			this.handleIadCharacterCollision(iad, character)
+			this.updateScore(character.name as Character, -100)
 		})
 
 		this.physics.add.overlap(characters, this.horses, (character, horse) => {
@@ -348,30 +349,42 @@ export class GameScene extends Phaser.Scene {
 		switch (characterName) {
 			case 'toucan': {
 				const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Toucan: ' + newText)
+				text.setText('Toucan: ' + newScore)
 				break
 			}
 			case 'duck': {
 				const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Duck: ' + newText)
+				text.setText('Duck: ' + newScore)
 				break
 			}
 			case 'flamingo': {
 				const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Flamingo: ' + newText)
+				text.setText('Flamingo: ' + newScore)
 				break
 			}
 			case 'unicorn': {
 				const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + points
+				let newScore = text?.getData('score') + points
+				if (newScore < 0) {
+					newScore = 0
+				}
 				text.setData('score', text?.getData('score') + points)
-				text.setText('Unicorn: ' + newText)
+				text.setText('Unicorn: ' + newScore)
 				break
 			}
 		}
@@ -416,6 +429,7 @@ export class GameScene extends Phaser.Scene {
 
 		const iad = this.physics.add.sprite(randomXPos, 250, IAD_ITEM_IMAGE).setScale(0.5)
 		iad.setCollideWorldBounds(true)
+
 		this.iads?.add(iad)
 	}
 
@@ -614,7 +628,7 @@ export class GameScene extends Phaser.Scene {
 		})
 
 		this.time.addEvent({
-			delay: 5000,
+			delay: 15000,
 			callback: () => this.spawnIad(),
 			loop: true,
 		})
