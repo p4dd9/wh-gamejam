@@ -15,7 +15,7 @@ import {
 	UNICORN_SCORE_TEXT,
 	FLAMINGO_SCORE_TEXT,
 } from '../../consts'
-import { SCENES } from '../config'
+import { gameConfig, SCENES } from '../config'
 
 export class GameScene extends Phaser.Scene {
 	private donuts: Phaser.GameObjects.Group | null = null
@@ -61,10 +61,52 @@ export class GameScene extends Phaser.Scene {
 		this.donuts = this.add.group()
 
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
-		this.physics.add.collider(characters, this.donuts, (char, donut) => this.handleDonutCharacterCollion(donut, char))
 
-		airconsole.onConnect = (device_id) => {
-			for (const character of this.playerCharacters) {
+		this.physics.add.collider(characters, this.donuts, (character, donut) => {
+			donut.destroy()
+			this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
+
+			this.time.addEvent({
+				delay: 5000,
+				callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
+				loop: false,
+			})
+
+			switch (character.name as Character) {
+				case 'toucan': {
+					const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
+					const newText = text?.getData('score') + 1
+					text.setData('score', text?.getData('score') + 1)
+					text.setText('Toucan: ' + newText)
+
+					break
+				}
+				case 'duck': {
+					const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
+					const newText = text?.getData('score') + 1
+					text.setData('score', text?.getData('score') + 1)
+					text.setText('Duck: ' + newText)
+					break
+				}
+				case 'flamingo': {
+					const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
+					const newText = text?.getData('score') + 1
+					text.setData('score', text?.getData('score') + 1)
+					text.setText('Flamingo: ' + newText)
+					break
+				}
+				case 'unicorn': {
+					const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
+					const newText = text?.getData('score') + 1
+					text.setData('score', text?.getData('score') + 1)
+					text.setText('Unicorn: ' + newText)
+					break
+				}
+			}
+		})
+
+		airconsole.onConnect = function (device_id) {
+			for (const character of characters.getChildren() as Phaser.GameObjects.Sprite[]) {
 				if (!character.getData('assigned')) {
 					character.setData('assigned', {
 						player: device_id,
@@ -93,6 +135,16 @@ export class GameScene extends Phaser.Scene {
 				this.start(airconsole)
 			}
 		}
+	}
+
+	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
+		if (character.scale < 1.5) {
+			character.setScale(character.scale + 0.1)
+		}
+	}
+
+	downscaleCharacter(character: Phaser.GameObjects.Sprite) {
+		character.setScale(character.scale - 0.1)
 	}
 
 	initCharacter(character: Character) {
@@ -275,10 +327,8 @@ export class GameScene extends Phaser.Scene {
 		this.drawScores()
 
 		this.time.addEvent({
-			delay: 5000, // ms
+			delay: 3500,
 			callback: () => this.spawnDonut(),
-			//args: [],
-			// callbackScope: thisArg,
 			loop: true,
 		})
 
