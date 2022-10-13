@@ -217,7 +217,7 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	onGameEnd() {
+	onGameEnd(airconsole: AirConsole) {
 		const flamingoScore = {
 			character: FLAMINGO_CHARACTER,
 			score: this.children.getByName(FLAMINGO_SCORE_TEXT)?.getData('score') as number,
@@ -242,6 +242,7 @@ export class GameScene extends Phaser.Scene {
 			.reverse()
 
 		this.drawScoreBoard(scores)
+		airconsole.message(AirConsole.SCREEN, { joinedState: "success", gameState: 'lobby' })
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -458,7 +459,7 @@ export class GameScene extends Phaser.Scene {
 		} else {
 			countdownSeconds = this.countdown.getData('seconds')
 		}
-		
+
 		if (countdownSeconds > 0) {
 			countdownSeconds--
 		}
@@ -607,7 +608,7 @@ export class GameScene extends Phaser.Scene {
 			callback: () => this.spawnHorses(),
       loop: true,
     })
-    
+
     this.time.addEvent({
 			delay: 1000,
 			callback: () => this.updateCountdown(),
@@ -625,5 +626,6 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 		}
+		airconsole.message(AirConsole.SCREEN, { joinedState: 'success', gameState: 'game' })
 	}
 }
