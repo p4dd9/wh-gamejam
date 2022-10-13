@@ -240,7 +240,7 @@ export class GameScene extends Phaser.Scene {
 			.reverse()
 
 		this.drawScoreBoard(scores)
-		airconsole.message(AirConsole.SCREEN, { joinedState: "success", gameState: 'lobby' })
+		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: "success", gameState: 'lobby' })
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -580,7 +580,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.time.addEvent({
 			delay: 180000, // 180000 3 min
-			callback: () => this.onGameEnd(),
+			callback: () => this.onGameEnd(airconsole),
 		})
 
 		this.time.addEvent({
@@ -620,6 +620,6 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 		}
-		airconsole.message(AirConsole.SCREEN, { joinedState: 'success', gameState: 'game' })
+		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: 'success', gameState: 'game' })
 	}
 }
