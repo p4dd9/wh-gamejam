@@ -223,7 +223,7 @@ export class GameScene extends Phaser.Scene {
 			.sort((a, b) => a.score - b.score)
 			.reverse()
 
-		alert(`${scores[0].character} won with ${scores[0].score}`)
+		this.drawScoreBoard(scores)
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -479,6 +479,44 @@ export class GameScene extends Phaser.Scene {
 			.setData('score', 0)
 			.setOrigin(1, 1)
 			.setResolution(3)
+	}
+
+	drawScoreBoard(scores: Score[]) {
+		this.add
+			.text(600, 50, `HIGHSCORES`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '65px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 150, `${scores[0].character}: ${scores[0].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 200, `${scores[1].character}: ${scores[1].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 250, `${scores[2].character}: ${scores[2].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(600, 300, `${scores[3].character}: ${scores[3].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
 	}
 
 	setStartCharacterPosition() {
