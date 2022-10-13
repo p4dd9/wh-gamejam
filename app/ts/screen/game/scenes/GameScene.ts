@@ -50,85 +50,21 @@ export class GameScene extends Phaser.Scene {
 		const sceneWidth = this.game.canvas.width
 		const sceneHeight = this.game.canvas.height
 
-		const sceneHorizontalCenter = sceneWidth / 2
-		const sceneVerticalCenter = sceneHeight / 2
-
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
 
-		const flamingo = this.physics.add
-			.sprite(sceneHorizontalCenter - 300, sceneVerticalCenter, FLAMINGO_CHARACTER_IMAGE)
-			.setScale(0.5)
-			.setName(FLAMINGO_CHARACTER)
-			.setData('assigned', null)
-			.setVelocity(0, 0)
-			.setBounce(1, 1)
-			.setCollideWorldBounds(true)
-		const unicorn = this.physics.add
-			.sprite(sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN_CHARACTER_IMAGE)
-			.setScale(0.5)
-			.setName(UNICORN_CHARACTER)
-			.setData('assigned', null)
-			.setVelocity(0, 0)
-			.setBounce(1, 1)
-			.setCollideWorldBounds(true)
-		const duck = this.physics.add
-			.sprite(sceneHorizontalCenter + 100, sceneVerticalCenter, DUCK_CHARACTER_IMAGE)
-			.setScale(0.5)
-			.setName(DUCK_CHARACTER)
-			.setData('assigned', null)
-			.setVelocity(0, 0)
-			.setBounce(1, 1)
-			.setCollideWorldBounds(true)
-
-		const toucan = this.physics.add
-			.sprite(sceneHorizontalCenter + 300, sceneVerticalCenter, TOUCAN_CHARACTER_IMAGE)
-			.setScale(0.5)
-			.setName(TOUCAN_CHARACTER)
-			.setData('assigned', null)
-			.setVelocity(0, 0)
-			.setBounce(1, 1)
-			.setCollideWorldBounds(true)
+		const flamingo = this.initCharacter('flamingo')
+		const duck = this.initCharacter('duck')
+		const unicorn = this.initCharacter('unicorn')
+		const toucan = this.initCharacter('toucan')
 
 		const characters = this.add.group([flamingo, unicorn, duck, toucan])
 		this.donuts = this.add.group()
+
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
-		this.physics.add.collider(characters, this.donuts, (character, donut) => {
-			donut.destroy()
+		this.physics.add.collider(characters, this.donuts, this.handleDonutCharacterCollion)
 
-			switch (character.name as Character) {
-				case 'toucan': {
-					const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Toucan: ' + newText)
-					break
-				}
-				case 'duck': {
-					const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Duck: ' + newText)
-					break
-				}
-				case 'flamingo': {
-					const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Flamingo: ' + newText)
-					break
-				}
-				case 'unicorn': {
-					const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-					const newText = text?.getData('score') + 1
-					text.setData('score', text?.getData('score') + 1)
-					text.setText('Unicorn: ' + newText)
-					break
-				}
-			}
-		})
-
-		airconsole.onConnect = function (device_id) {
-			for (const character of characters.getChildren() as Phaser.GameObjects.Sprite[]) {
+		airconsole.onConnect = (device_id) => {
+			for (const character of this.playerCharacters) {
 				if (!character.getData('assigned')) {
 					character.setData('assigned', {
 						player: device_id,
@@ -147,6 +83,98 @@ export class GameScene extends Phaser.Scene {
 				this.start(airconsole)
 			}
 		}
+	}
+
+	initCharacter(character: Character) {
+		const sceneWidth = this.game.canvas.width
+		const sceneHeight = this.game.canvas.height
+
+		const sceneHorizontalCenter = sceneWidth / 2
+		const sceneVerticalCenter = sceneHeight / 2
+
+		switch (character) {
+			case 'duck': {
+				return this.physics.add
+					.sprite(sceneHorizontalCenter + 100, sceneVerticalCenter, DUCK_CHARACTER_IMAGE)
+					.setScale(0.5)
+					.setName(DUCK_CHARACTER)
+					.setData('assigned', null)
+					.setVelocity(0, 0)
+					.setBounce(1, 1)
+					.setCollideWorldBounds(true)
+			}
+			case 'flamingo': {
+				return this.physics.add
+					.sprite(sceneHorizontalCenter - 300, sceneVerticalCenter, FLAMINGO_CHARACTER_IMAGE)
+					.setScale(0.5)
+					.setName(FLAMINGO_CHARACTER)
+					.setData('assigned', null)
+					.setVelocity(0, 0)
+					.setBounce(1, 1)
+					.setCollideWorldBounds(true)
+			}
+			case 'unicorn': {
+				return this.physics.add
+					.sprite(sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN_CHARACTER_IMAGE)
+					.setScale(0.5)
+					.setName(UNICORN_CHARACTER)
+					.setData('assigned', null)
+					.setVelocity(0, 0)
+					.setBounce(1, 1)
+					.setCollideWorldBounds(true)
+			}
+			case 'toucan': {
+				return this.physics.add
+					.sprite(sceneHorizontalCenter + 300, sceneVerticalCenter, TOUCAN_CHARACTER_IMAGE)
+					.setScale(0.5)
+					.setName(TOUCAN_CHARACTER)
+					.setData('assigned', null)
+					.setVelocity(0, 0)
+					.setBounce(1, 1)
+					.setCollideWorldBounds(true)
+			}
+		}
+	}
+
+	updateScore(characterName: Character) {
+		switch (characterName) {
+			case 'toucan': {
+				const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
+				const newText = text?.getData('score') + 1
+				text.setData('score', text?.getData('score') + 1)
+				text.setText('Toucan: ' + newText)
+				break
+			}
+			case 'duck': {
+				const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
+				const newText = text?.getData('score') + 1
+				text.setData('score', text?.getData('score') + 1)
+				text.setText('Duck: ' + newText)
+				break
+			}
+			case 'flamingo': {
+				const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
+				const newText = text?.getData('score') + 1
+				text.setData('score', text?.getData('score') + 1)
+				text.setText('Flamingo: ' + newText)
+				break
+			}
+			case 'unicorn': {
+				const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
+				const newText = text?.getData('score') + 1
+				text.setData('score', text?.getData('score') + 1)
+				text.setText('Unicorn: ' + newText)
+				break
+			}
+		}
+	}
+
+	handleDonutCharacterCollion(
+		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
+	) {
+		donut.destroy()
+		this.updateScore(character.name as Character)
 	}
 
 	spawnDonut() {
