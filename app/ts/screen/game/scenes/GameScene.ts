@@ -16,6 +16,8 @@ import {
 	FLAMINGO_SCORE_TEXT,
 	SCHOKIBON_ITEM_IMAGE,
 	SIMPLE_SCHOKIBON_POINTS,
+	BACKGROUND_AUDIO,
+	SCHOKIBON_AUDIO,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -48,6 +50,9 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(SCHOKIBON_ITEM_IMAGE, 'assets/schokibon.png')
 
 		this.load.image(BACKGROUND_PATTERN_IMAGE, 'assets/background_water.png')
+
+		this.load.audio(BACKGROUND_AUDIO, 'assets/background_audio.mp3')
+		this.load.audio(SCHOKIBON_AUDIO, 'assets/schokibon_audio.mp3')
 	}
 
 	create(airconsole: AirConsole) {
@@ -55,6 +60,8 @@ export class GameScene extends Phaser.Scene {
 		const sceneHeight = this.game.canvas.height
 
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
+		
+		this.sound.play(BACKGROUND_AUDIO)
 
 		const flamingo = this.initCharacter('flamingo')
 		const duck = this.initCharacter('duck')
@@ -270,6 +277,7 @@ export class GameScene extends Phaser.Scene {
 		schokibon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(SCHOKIBON_AUDIO)
 		schokibon.destroy()
 		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
 	}
