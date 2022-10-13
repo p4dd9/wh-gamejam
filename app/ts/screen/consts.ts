@@ -7,6 +7,7 @@ export const UNICORN_CHARACTER_IMAGE = 'unicornCharacter'
 export const DUCK_CHARACTER_IMAGE = 'duckCharacter'
 
 export const HORSE_ITEM_IMAGE = 'horse'
+export const IAD_ITEM_IMAGE = 'iad'
 export const DONUT_ITEM_IMAGE = 'donut'
 export const SCHOKIBON_ITEM_IMAGE = 'schokibon'
 
@@ -46,22 +47,21 @@ export const DUCK_CHARACTER = 'duck'
  */
 export const MAX_PLAYER = 4
 
-
 /**
  * Background enrichment
  */
 
-export const BOTTOM_RIGHT = 'bottom-right';
-export const BOTTOM_LEFT = 'bottom-left';
-export const TOP_RIGHT = 'top-right';
-export const TOP_LEFT = 'top-left';
+export const BOTTOM_RIGHT = 'bottom-right'
+export const BOTTOM_LEFT = 'bottom-left'
+export const TOP_RIGHT = 'top-right'
+export const TOP_LEFT = 'top-left'
 
-export const WHALE = 'whale';
-export const TURTLE = 'turtle';
-export const DOLPHINE = 'dolphine';
-export const STONES = 'stones'; 
+export const WHALE = 'whale'
+export const TURTLE = 'turtle'
+export const DOLPHINE = 'dolphine'
+export const STONES = 'stones'
 
-export const IMAGE_ARRAY:string [] = new Array(WHALE, TURTLE, DOLPHINE, STONES);
+export const IMAGE_ARRAY: string[] = new Array(WHALE, TURTLE, DOLPHINE, STONES)
 /**
  * POINTS
  */
