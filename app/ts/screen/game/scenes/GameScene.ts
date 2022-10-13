@@ -15,6 +15,7 @@ import {
 	UNICORN_SCORE_TEXT,
 	FLAMINGO_SCORE_TEXT,
 	SCHOKIBON_ITEM_IMAGE,
+	SIMPLE_SCHOKIBON_POINTS,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -205,37 +206,39 @@ export class GameScene extends Phaser.Scene {
 			}
 		}
 	}
-getRandomAngularVelocity(){
+
+	getRandomAngularVelocity(){
 		let velocity = [60,-60]
 		return velocity[Phaser.Math.Between(0,1)]
-}
-	updateScore(characterName: Character) {
+	}
+
+	updateScore(characterName: Character, points: number) {
 		switch (characterName) {
 			case 'toucan': {
 				const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + 1
-				text.setData('score', text?.getData('score') + 1)
+				const newText = text?.getData('score') + points
+				text.setData('score', text?.getData('score') + points)
 				text.setText('Toucan: ' + newText)
 				break
 			}
 			case 'duck': {
 				const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + 1
-				text.setData('score', text?.getData('score') + 1)
+				const newText = text?.getData('score') + points
+				text.setData('score', text?.getData('score') + points)
 				text.setText('Duck: ' + newText)
 				break
 			}
 			case 'flamingo': {
 				const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + 1
-				text.setData('score', text?.getData('score') + 1)
+				const newText = text?.getData('score') + points
+				text.setData('score', text?.getData('score') + points)
 				text.setText('Flamingo: ' + newText)
 				break
 			}
 			case 'unicorn': {
 				const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-				const newText = text?.getData('score') + 1
-				text.setData('score', text?.getData('score') + 1)
+				const newText = text?.getData('score') + points
+				text.setData('score', text?.getData('score') + points)
 				text.setText('Unicorn: ' + newText)
 				break
 			}
@@ -254,7 +257,7 @@ getRandomAngularVelocity(){
 			callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
 			loop: false,
 		})
-		this.updateScore(character.name as Character)
+		this.updateScore(character.name as Character, 1)
 	}
 
 	handleSchokibonCharacterCollisions(
@@ -262,7 +265,7 @@ getRandomAngularVelocity(){
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
 		schokibon.destroy()
-		this.updateScore(character.name as Character)
+		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
 	}
 
 	spawnDonut() {

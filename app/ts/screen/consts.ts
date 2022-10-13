@@ -33,3 +33,8 @@ export const DUCK_CHARACTER = 'duck'
  * Config
  */
 export const MAX_PLAYER = 4
+
+/**
+ * POINTS
+ */
+export const SIMPLE_SCHOKIBON_POINTS = 100
