@@ -32,3 +32,20 @@ export const DUCK_CHARACTER = 'duck'
  * Config
  */
 export const MAX_PLAYER = 4
+
+
+/**
+ * Background enrichment
+ */
+
+export const BOTTOM_RIGHT = 'bottom-right';
+export const BOTTOM_LEFT = 'bottom-left';
+export const TOP_RIGHT = 'top-right';
+export const TOP_LEFT = 'top-left';
+
+export const WHALE = 'whale';
+export const TURTLE = 'turtle';
+export const DOLPHINE = 'dolphine';
+export const STONES = 'stones'; 
+
+export const IMAGE_ARRAY:string [] = new Array(WHALE, TURTLE, DOLPHINE, STONES);
