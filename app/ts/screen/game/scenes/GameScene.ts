@@ -1,4 +1,4 @@
-import { Character, PlayerInputs } from '../../../shared/common'
+import { Character, PlayerInputs, Score } from '../../../shared/common'
 import {
 	FLAMINGO_CHARACTER_IMAGE,
 	TOUCAN_CHARACTER_IMAGE,
@@ -61,10 +61,13 @@ export class GameScene extends Phaser.Scene {
 		this.donuts = this.add.group()
 
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
-		this.physics.add.collider(characters, this.donuts, (char, donut) => this.handleDonutCharacterCollion(donut, char))
 
-		airconsole.onConnect = (device_id) => {
-			for (const character of this.playerCharacters) {
+		this.physics.add.collider(characters, this.donuts, (character, donut) => {
+			this.handleDonutCharacterCollisions(donut, character)
+		})
+
+		airconsole.onConnect = function (device_id) {
+			for (const character of characters.getChildren() as Phaser.GameObjects.Sprite[]) {
 				if (!character.getData('assigned')) {
 					character.setData('assigned', {
 						player: device_id,
@@ -93,6 +96,43 @@ export class GameScene extends Phaser.Scene {
 				this.start(airconsole)
 			}
 		}
+	}
+
+	onGameEnd() {
+		const flamingoScore = {
+			character: FLAMINGO_CHARACTER,
+			score: this.children.getByName(FLAMINGO_SCORE_TEXT)?.getData('score') as number,
+		}
+		const toucanScore = {
+			character: TOUCAN_CHARACTER,
+			score: this.children.getByName(TOUCAN_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const unicornScore = {
+			character: UNICORN_CHARACTER,
+			score: this.children.getByName(UNICORN_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const duckScore = {
+			character: DUCK_CHARACTER,
+			score: this.children.getByName(DUCK_SCORE_TEXT)?.getData('score') as number,
+		}
+
+		const scores: Score[] = [flamingoScore, toucanScore, unicornScore, duckScore]
+			.sort((a, b) => a.score - b.score)
+			.reverse()
+
+		alert(`${scores[0].character} won with ${scores[0].score}`)
+	}
+
+	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
+		if (character.scale < 1.5) {
+			character.setScale(character.scale + 0.1)
+		}
+	}
+
+	downscaleCharacter(character: Phaser.GameObjects.Sprite) {
+		character.setScale(character.scale - 0.1)
 	}
 
 	initCharacter(character: Character) {
@@ -183,11 +223,18 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	handleDonutCharacterCollion(
+	handleDonutCharacterCollisions(
 		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
 		donut.destroy()
+		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
+
+		this.time.addEvent({
+			delay: 5000,
+			callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
+			loop: false,
+		})
 		this.updateScore(character.name as Character)
 	}
 
@@ -275,10 +322,13 @@ export class GameScene extends Phaser.Scene {
 		this.drawScores()
 
 		this.time.addEvent({
-			delay: 5000, // ms
+			delay: 180000, // 180000 3 min
+			callback: () => this.onGameEnd(),
+		})
+
+		this.time.addEvent({
+			delay: 3500,
 			callback: () => this.spawnDonut(),
-			//args: [],
-			// callbackScope: thisArg,
 			loop: true,
 		})
 

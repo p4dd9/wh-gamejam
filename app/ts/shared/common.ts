@@ -8,3 +8,8 @@ export interface LobbyAction {
 	joinedState: 'success' | 'full' | 'disconnected'
 	character?: Character
 }
+
+export interface Score {
+	character: string
+	score: number
+}
