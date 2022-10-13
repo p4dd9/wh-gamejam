@@ -24,7 +24,10 @@ import {
 	STONES,
 	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
-	SIMPLE_SCHOKIBON_POINTS
+	SIMPLE_SCHOKIBON_POINTS,
+	BACKGROUND_AUDIO,
+	SCHOKIBON_AUDIO,
+	DONUT_AUDIO,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -58,6 +61,10 @@ export class GameScene extends Phaser.Scene {
 
 		this.load.image(BACKGROUND_PATTERN_IMAGE, 'assets/background_water.png')
 
+		this.load.audio(BACKGROUND_AUDIO, 'assets/background_audio.mp3')
+		this.load.audio(SCHOKIBON_AUDIO, 'assets/schokibon_audio.mp3')
+		this.load.audio(DONUT_AUDIO, 'assets/donut_audio.mp3')
+
 		this.load.image(BOTTOM_RIGHT, `assets/${BOTTOM_RIGHT}.png`)
 		this.load.image(BOTTOM_LEFT, `assets/${BOTTOM_LEFT}.png`)
 		this.load.image(TOP_RIGHT, `assets/${TOP_RIGHT}.png`)
@@ -67,14 +74,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(TURTLE, `assets/${TURTLE}.png`)
 		this.load.image(DOLPHINE, `assets/${DOLPHINE}.png`)
 		this.load.image(STONES, `assets/${STONES}.png`)
-
-		
-
-
-
-		/*
-			Loading images for background
-		*/
 	}
 
 	 
@@ -85,6 +84,9 @@ export class GameScene extends Phaser.Scene {
 
 		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
 		
+
+		this.sound.play(BACKGROUND_AUDIO)
+
 		for(let i = 0, y = 0; i<3; i++){
 			let x = 0; 
 			for(let j = 0; j<12; j++){
@@ -98,8 +100,6 @@ export class GameScene extends Phaser.Scene {
 		this.add.image(10,sceneHeight - 175, BOTTOM_LEFT).setOrigin(0,0)
 		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0,0)
 		this.add.image(sceneWidth - 175, sceneHeight-175, BOTTOM_RIGHT).setOrigin(0,0)
-
-
 
 
 		const flamingo = this.initCharacter('flamingo')
@@ -344,6 +344,7 @@ export class GameScene extends Phaser.Scene {
 		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(DONUT_AUDIO)
 		donut.destroy()
 		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
 
@@ -359,6 +360,7 @@ export class GameScene extends Phaser.Scene {
 		schokibon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(SCHOKIBON_AUDIO)
 		schokibon.destroy()
 		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
 	}

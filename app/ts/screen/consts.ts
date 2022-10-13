@@ -12,6 +12,17 @@ export const SCHOKIBON_ITEM_IMAGE = 'schokibon'
 export const BACKGROUND_PATTERN_IMAGE = 'backgroundPattern'
 
 /**
+ * Background Music
+ */
+export const BACKGROUND_AUDIO = 'backgroundAudio'
+
+/**
+ * Sounds
+ */
+export const SCHOKIBON_AUDIO = 'schokibonAudio'
+export const DONUT_AUDIO = 'donutAudio'
+
+/**
  * Scores
  */
 
