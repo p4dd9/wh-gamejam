@@ -233,24 +233,28 @@ export class GameScene extends Phaser.Scene {
 		character.body.velocity.y = 0
 	}
 
-	onGameEnd() {
+	onGameEnd(airconsole: AirConsole) {
 		const flamingoScore = {
 			character: FLAMINGO_CHARACTER,
 			score: this.children.getByName(FLAMINGO_SCORE_TEXT)?.getData('score') as number,
+			color: '#fa6493',
 		}
 		const toucanScore = {
 			character: TOUCAN_CHARACTER,
 			score: this.children.getByName(TOUCAN_SCORE_TEXT)?.getData('score') as number,
+			color: '#414545',
 		}
 
 		const unicornScore = {
 			character: UNICORN_CHARACTER,
 			score: this.children.getByName(UNICORN_SCORE_TEXT)?.getData('score') as number,
+			color: '#FFFFFF',
 		}
 
 		const duckScore = {
 			character: DUCK_CHARACTER,
 			score: this.children.getByName(DUCK_SCORE_TEXT)?.getData('score') as number,
+			color: '#f5e93c',
 		}
 
 		const scores: Score[] = [flamingoScore, toucanScore, unicornScore, duckScore]
@@ -258,6 +262,7 @@ export class GameScene extends Phaser.Scene {
 			.reverse()
 
 		this.drawScoreBoard(scores)
+		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: "success", gameState: 'lobby' })
 	}
 
 	upscaleCharacter(character: Phaser.GameObjects.Sprite) {
@@ -552,36 +557,41 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	drawScoreBoard(scores: Score[]) {
-		this.add.text(this.game.canvas.width / 2, 50, `HIGHSCORES`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '65px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2, 150, `${scores[0].character}: ${scores[0].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2, 200, `${scores[1].character}: ${scores[1].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2, 250, `${scores[2].character}: ${scores[2].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2, 300, `${scores[3].character}: ${scores[3].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
+		this.add
+			.text(this.game.canvas.width/2-100, 150, `HIGHSCORES`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '65px',
+				color: '#FFFFFF',
+				align: 'left',
+			})
+		this.add
+			.text(this.game.canvas.width/2-100, 250, `${scores[0].character}: ${scores[0].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: `${scores[0].color}`,
+				align: 'left',
+			})
+		this.add
+			.text(this.game.canvas.width/2-100, 300, `${scores[1].character}: ${scores[1].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: `${scores[1].color}`,
+				align: 'left',
+			})
+		this.add
+			.text(this.game.canvas.width/2-100, 350, `${scores[2].character}: ${scores[2].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: `${scores[2].color}`,
+				align: 'left',
+			})
+		this.add
+			.text(this.game.canvas.width/2-100, 400, `${scores[3].character}: ${scores[3].score}`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '48px',
+				color: `${scores[3].color}`,
+				align: 'left',
+			})
 	}
 
 	setStartCharacterPosition() {
@@ -618,7 +628,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.time.addEvent({
 			delay: 180000, // 180000 3 min
-			callback: () => this.onGameEnd(),
+			callback: () => this.onGameEnd(airconsole),
 		})
 
 		this.time.addEvent({
@@ -647,7 +657,7 @@ export class GameScene extends Phaser.Scene {
 			loop: true,
 		})
 
-		this.time.addEvent({
+    this.time.addEvent({
 			delay: 1000,
 			callback: () => this.updateCountdown(),
 			loop: true,
@@ -664,5 +674,6 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 		}
+		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: 'success', gameState: 'game' })
 	}
 }
