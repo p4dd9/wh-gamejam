@@ -25,6 +25,7 @@ import {
 	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
 	SIMPLE_SCHOKIBON_POINTS,
+	HORSE_ITEM_IMAGE,
 	COUNTDOWN,
 	BACKGROUND_AUDIO,
 	SCHOKIBON_AUDIO,
@@ -35,6 +36,7 @@ import { SCENES } from '../config'
 export class GameScene extends Phaser.Scene {
 	private donuts: Phaser.GameObjects.Group | null = null
 	private schokibons: Phaser.GameObjects.Group | null = null
+	private horses: Phaser.GameObjects.Group | null = null
 	private playerCharacters: Phaser.GameObjects.Sprite[] = []
 	private countdown: Phaser.GameObjects.Text | null = null
 
@@ -58,6 +60,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(UNICORN_CHARACTER_IMAGE, 'assets/unicorn.png')
 		this.load.image(DUCK_CHARACTER_IMAGE, 'assets/duck.png')
 
+		this.load.image(HORSE_ITEM_IMAGE, 'assets/horse.png')
 		this.load.image(DONUT_ITEM_IMAGE, 'assets/donut.png')
 		this.load.image(SCHOKIBON_ITEM_IMAGE, 'assets/schokibon.png')
 
@@ -107,7 +110,8 @@ export class GameScene extends Phaser.Scene {
 		const unicorn = this.initCharacter('unicorn')
 		const toucan = this.initCharacter('toucan')
 
-		flamingo.body.world.on('worldbounds',
+		flamingo.body.world.on(
+			'worldbounds',
 			(body: Phaser.Physics.Arcade.Body) => {
 				// Check if the body's game object is the sprite you are listening for
 				if (body.gameObject === flamingo) {
@@ -116,9 +120,11 @@ export class GameScene extends Phaser.Scene {
 					flamingo.body.velocity.x -= 300
 				}
 			},
-			flamingo)
+			flamingo
+		)
 
-		duck.body.world.on('worldbounds',
+		duck.body.world.on(
+			'worldbounds',
 			(body: Phaser.Physics.Arcade.Body) => {
 				// Check if the body's game object is the sprite you are listening for
 				if (body.gameObject === duck) {
@@ -127,9 +133,11 @@ export class GameScene extends Phaser.Scene {
 					duck.body.velocity.x -= 300
 				}
 			},
-			duck)
+			duck
+		)
 
-		unicorn.body.world.on('worldbounds',
+		unicorn.body.world.on(
+			'worldbounds',
 			(body: Phaser.Physics.Arcade.Body) => {
 				// Check if the body's game object is the sprite you are listening for
 				if (body.gameObject === unicorn) {
@@ -138,9 +146,11 @@ export class GameScene extends Phaser.Scene {
 					unicorn.body.velocity.x -= 300
 				}
 			},
-			unicorn)
+			unicorn
+		)
 
-		toucan.body.world.on('worldbounds',
+		toucan.body.world.on(
+			'worldbounds',
 			(body: Phaser.Physics.Arcade.Body) => {
 				// Check if the body's game object is the sprite you are listening for
 				if (body.gameObject === toucan) {
@@ -149,11 +159,13 @@ export class GameScene extends Phaser.Scene {
 					toucan.body.velocity.x -= 300
 				}
 			},
-			toucan)
+			toucan
+		)
 
 		const characters = this.add.group([flamingo, unicorn, duck, toucan])
 		this.donuts = this.add.group()
 		this.schokibons = this.add.group()
+		this.horses = this.add.group()
 
 		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
 
@@ -163,6 +175,10 @@ export class GameScene extends Phaser.Scene {
 
 		this.physics.add.collider(characters, this.schokibons, (character, schokibon) => {
 			this.handleSchokibonCharacterCollisions(schokibon, character)
+		})
+
+		this.physics.add.overlap(characters, this.horses, (character, horse) => {
+			this.handleHorseCharacterOverlap(horse, character)
 		})
 
 		airconsole.onConnect = function (device_id) {
@@ -272,7 +288,7 @@ export class GameScene extends Phaser.Scene {
 				return flamingo
 			}
 			case 'unicorn': {
-				const unicorn =  this.physics.add
+				const unicorn = this.physics.add
 					.sprite(sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN_CHARACTER_IMAGE)
 					.setScale(0.5)
 					.setName(UNICORN_CHARACTER)
@@ -363,6 +379,14 @@ export class GameScene extends Phaser.Scene {
 		this.sound.play(SCHOKIBON_AUDIO)
 		schokibon.destroy()
 		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
+	}
+
+	handleHorseCharacterOverlap(
+		horse: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
+	) {
+		horse.destroy()
+		character.body.velocity.x += 1000
 	}
 
 	spawnDonut() {
@@ -533,6 +557,19 @@ export class GameScene extends Phaser.Scene {
 		toucan.setPosition(sceneHorizontalCenter + 300, startLanesY).setScale(0.5)
 	}
 
+	spawnHorses() {
+		const spawnXpadding = 100
+		const randomYPos = Phaser.Math.Between(spawnXpadding, this.game.canvas.height - spawnXpadding * 5)
+
+		const horse = this.physics.add.sprite(spawnXpadding, randomYPos, HORSE_ITEM_IMAGE).setScale(0.07)
+
+		horse.setCollideWorldBounds(true)
+		horse.body.onWorldBounds = true
+		horse.setVelocityX(200)
+		horse.setVelocityY(-205)
+		this.horses?.add(horse)
+	}
+
 	start(airconsole: AirConsole) {
 		this.setStartCharacterPosition()
 		this.drawScores()
@@ -557,6 +594,12 @@ export class GameScene extends Phaser.Scene {
 		})
 
 		this.time.addEvent({
+			delay: 20000,
+			callback: () => this.spawnHorses(),
+      loop: true,
+    })
+    
+    this.time.addEvent({
 			delay: 1000,
 			callback: () => this.updateCountdown(),
 			loop: true,
