@@ -25,6 +25,7 @@ import {
 	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
 	SIMPLE_SCHOKIBON_POINTS,
+	COUNTDOWN,
 	BACKGROUND_AUDIO,
 	SCHOKIBON_AUDIO,
 	DONUT_AUDIO,
@@ -35,6 +36,7 @@ export class GameScene extends Phaser.Scene {
 	private donuts: Phaser.GameObjects.Group | null = null
 	private schokibons: Phaser.GameObjects.Group | null = null
 	private playerCharacters: Phaser.GameObjects.Sprite[] = []
+	private countdown: Phaser.GameObjects.Text | null = null
 
 	constructor() {
 		super({ key: SCENES.GAME })
@@ -75,8 +77,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.image(DOLPHINE, `assets/${DOLPHINE}.png`)
 		this.load.image(STONES, `assets/${STONES}.png`)
 	}
-
-	 
 
 	create(airconsole: AirConsole) {
 		const sceneWidth = this.game.canvas.width
@@ -407,6 +407,34 @@ export class GameScene extends Phaser.Scene {
 		this.schokibons?.add(schokibon)
 	}
 
+	updateCountdown() {
+		let countdownSeconds: number = 0
+
+		if (this.countdown == null) {
+			this.countdown = this.add
+				.text(500, 50, 'Countdown', {
+					fontFamily: 'Luckiest Guy',
+					fontSize: '48px',
+					color: '#ff0000',
+					align: 'middle',
+				})
+				.setName(COUNTDOWN)
+				.setResolution(3)
+
+			countdownSeconds = 180
+		} else {
+			countdownSeconds = this.countdown.getData('seconds')
+		}
+		
+		if (countdownSeconds > 1) {
+			countdownSeconds--
+			
+		}
+
+		this.countdown.setData('seconds', countdownSeconds)
+		this.countdown.setText('⏱ ' + countdownSeconds)
+	}
+
 	drawScores() {
 		this.add
 			.text(70, 70, 'Flamingo: 0', {
@@ -488,6 +516,12 @@ export class GameScene extends Phaser.Scene {
 			callback: () => this.spawnSchokibon(),
 			//args: [],
 			// callbackScope: thisArg,
+			loop: true,
+		})
+
+		this.time.addEvent({
+			delay: 1000,
+			callback: () => this.updateCountdown(),
 			loop: true,
 		})
 

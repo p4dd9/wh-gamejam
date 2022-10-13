@@ -65,3 +65,8 @@ export const IMAGE_ARRAY:string [] = new Array(WHALE, TURTLE, DOLPHINE, STONES);
  * POINTS
  */
 export const SIMPLE_SCHOKIBON_POINTS = 100
+
+/**
+ * Countdown
+ */
+export const COUNTDOWN = 'countdown'
