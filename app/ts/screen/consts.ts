@@ -20,6 +20,7 @@ export const BACKGROUND_AUDIO = 'backgroundAudio'
  * Sounds
  */
 export const SCHOKIBON_AUDIO = 'schokibonAudio'
+export const DONUT_AUDIO = 'donutAudio'
 
 /**
  * Scores

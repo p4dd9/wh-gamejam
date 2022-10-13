@@ -18,6 +18,7 @@ import {
 	SIMPLE_SCHOKIBON_POINTS,
 	BACKGROUND_AUDIO,
 	SCHOKIBON_AUDIO,
+	DONUT_AUDIO,
 } from '../../consts'
 import { SCENES } from '../config'
 
@@ -53,6 +54,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.load.audio(BACKGROUND_AUDIO, 'assets/background_audio.mp3')
 		this.load.audio(SCHOKIBON_AUDIO, 'assets/schokibon_audio.mp3')
+		this.load.audio(DONUT_AUDIO, 'assets/donut_audio.mp3')
 	}
 
 	create(airconsole: AirConsole) {
@@ -262,6 +264,7 @@ export class GameScene extends Phaser.Scene {
 		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
 		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
 	) {
+		this.sound.play(DONUT_AUDIO)
 		donut.destroy()
 		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
 
