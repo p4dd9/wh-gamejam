@@ -82,6 +82,7 @@ export class GameScene extends Phaser.Scene {
 						player: device_id,
 					})
 					character.setVisible(true)
+					character.setActive(true)
 
 					airconsole.message(device_id, { joinedState: 'success', character: character.name as Character })
 					return
@@ -95,6 +96,7 @@ export class GameScene extends Phaser.Scene {
 				if (character.getData('assigned') && character.getData('assigned').player === device_id) {
 					character.setData('assigned', null)
 					character.setVisible(false)
+					character.setActive(false)
 				}
 			}
 			airconsole.message(device_id, { joinedState: 'disconnected' })
@@ -164,6 +166,7 @@ export class GameScene extends Phaser.Scene {
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+					.setActive(false)
 			}
 			case 'flamingo': {
 				return this.physics.add
@@ -177,6 +180,7 @@ export class GameScene extends Phaser.Scene {
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+					.setActive(false)
 			}
 			case 'unicorn': {
 				return this.physics.add
@@ -190,6 +194,7 @@ export class GameScene extends Phaser.Scene {
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+					.setActive(false)
 			}
 			case 'toucan': {
 				return this.physics.add
@@ -203,13 +208,14 @@ export class GameScene extends Phaser.Scene {
 					.setBounce(1, 1)
 					.setCollideWorldBounds(true)
 					.setVisible(false)
+					.setActive(false)
 			}
 		}
 	}
 
-	getRandomAngularVelocity(){
-		let velocity = [60,-60]
-		return velocity[Phaser.Math.Between(0,1)]
+	getRandomAngularVelocity() {
+		let velocity = [60, -60]
+		return velocity[Phaser.Math.Between(0, 1)]
 	}
 
 	updateScore(characterName: Character, points: number) {
