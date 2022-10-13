@@ -426,9 +426,8 @@ export class GameScene extends Phaser.Scene {
 			countdownSeconds = this.countdown.getData('seconds')
 		}
 		
-		if (countdownSeconds > 1) {
+		if (countdownSeconds > 0) {
 			countdownSeconds--
-			
 		}
 
 		this.countdown.setData('seconds', countdownSeconds)
