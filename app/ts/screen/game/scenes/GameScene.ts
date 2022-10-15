@@ -118,9 +118,13 @@ export class GameScene extends Phaser.Scene {
 			this.handleHorseCharacterOverlap(horse, character as Character)
 		})
 
+		this.physics.add.collider(characters, characters, (character1, character2) => {
+			character1.body.velocity.add({ x: Phaser.Math.Between(-50, 50), y: -75 })
+			character2.body.velocity.add({ x: Phaser.Math.Between(-50, 50), y: -75 })
+		})
+
 		airconsole.onConnect = (device_id) => {
 			for (const character of characters.getChildren() as Phaser.GameObjects.Sprite[]) {
-				console.log(character)
 				if (!character.getData('assigned')) {
 					character.setData('assigned', {
 						player: device_id,

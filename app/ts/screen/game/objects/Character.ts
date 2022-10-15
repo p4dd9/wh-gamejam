@@ -22,7 +22,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
 		this.setVelocity(0, 0)
 		this.setAngularVelocity(this.getRandomAngularVelocity())
-		this.setBounce(1, 1)
+		this.setBounce(0.75, 0.85)
 		this.setCollideWorldBounds(true)
 		this.setVisible(false)
 		this.setActive(false)
