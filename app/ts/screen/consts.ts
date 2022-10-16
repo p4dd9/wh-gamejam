@@ -1,11 +1,8 @@
+import { CharacterName, CharacterProps } from '../shared/common'
+
 /**
  * Assets keys
  */
-export const FLAMINGO_CHARACTER_IMAGE = 'flamingoCharacter'
-export const TOUCAN_CHARACTER_IMAGE = 'toucanCharacter'
-export const UNICORN_CHARACTER_IMAGE = 'unicornCharacter'
-export const DUCK_CHARACTER_IMAGE = 'duckCharacter'
-
 export const HORSE_ITEM_IMAGE = 'horse'
 export const IAD_ITEM_IMAGE = 'iad'
 export const DONUT_ITEM_IMAGE = 'donut'
@@ -26,27 +23,40 @@ export const DONUT_AUDIO = 'donutAudio'
 export const IAD_AUDIO = 'iadAudio'
 
 /**
- * Scores
- */
-
-export const FLAMINGO_SCORE_TEXT = 'flamingScore'
-export const TOUCAN_SCORE_TEXT = 'toucanScore'
-export const UNICORN_SCORE_TEXT = 'unicornScore'
-export const DUCK_SCORE_TEXT = 'duckScore'
-
-/**
  * Character names
  */
+export const FLAMINGO: CharacterProps = {
+	name: 'flamingo',
+	scoreKey: 'flamingScore',
+	texture: 'flamingoCharacter',
+	color: '#fa6493',
+}
 
-export const FLAMINGO_CHARACTER = 'flamingo'
-export const TOUCAN_CHARACTER = 'toucan'
-export const UNICORN_CHARACTER = 'unicorn'
-export const DUCK_CHARACTER = 'duck'
+export const TOUCAN: CharacterProps = {
+	name: 'toucan',
+	scoreKey: 'toucanScore',
+	texture: 'toucanCharacter',
+	color: '#414545',
+}
+
+export const DUCK: CharacterProps = {
+	name: 'duck',
+	scoreKey: 'duckScore',
+	texture: 'duckCharacter',
+	color: '#f5e93c',
+}
+
+export const UNICORN: CharacterProps = {
+	name: 'unicorn',
+	scoreKey: 'unicornScore',
+	texture: 'unicornCharacter',
+	color: '#FFFFFF',
+}
 
 /**
  * Config
  */
-export const MAX_PLAYER = 4
+export const MIN_PLAYERS = 2
 
 /**
  * Background enrichment
@@ -66,7 +76,8 @@ export const IMAGE_ARRAY: string[] = new Array(WHALE, TURTLE, DOLPHINE, STONES)
 /**
  * POINTS
  */
-export const SIMPLE_SCHOKIBON_POINTS = 100
+export const SCHOKIBON_POINTS = 1000
+export const DONUT_POINTS = 100
 
 /**
  * Countdown

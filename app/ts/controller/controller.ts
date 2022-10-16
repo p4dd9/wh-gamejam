@@ -3,8 +3,8 @@
  * to the <head> of the document.
  */
 import '../../css/controller.css'
-import {GameUpdates} from '../shared/common'
-import {MAX_PLAYER} from "../screen/consts";
+import { GameUpdates } from '../shared/common'
+import { MIN_PLAYERS } from '../screen/consts'
 
 const airconsole = new AirConsole()
 airconsole.setOrientation(AirConsole.ORIENTATION_LANDSCAPE)
@@ -25,8 +25,8 @@ rightButton.addEventListener('click', () => {
 
 let startButton = <HTMLElement>document.body.querySelector('#start')
 startButton.addEventListener('click', () => {
-	if (airconsole.getControllerDeviceIds().length < MAX_PLAYER) {
-		alert("You need 4 players to start the game")
+	if (airconsole.getControllerDeviceIds().length < MIN_PLAYERS) {
+		alert(`You need at least ${MIN_PLAYERS} players.`)
 	} else {
 		startGame()
 	}
@@ -36,26 +36,26 @@ startButton.addEventListener('click', () => {
  * Tells the screen to move the player to the left.
  */
 function moveLeft() {
-	airconsole.message(AirConsole.SCREEN, {MOVE: 'left', START: false})
+	airconsole.message(AirConsole.SCREEN, { MOVE: 'left', START: false })
 }
 
 /**
  * Tells the screen to move the player to the right.
  */
 function moveRight() {
-	airconsole.message(AirConsole.SCREEN, {MOVE: 'right', START: false})
+	airconsole.message(AirConsole.SCREEN, { MOVE: 'right', START: false })
 }
 
 /**
  * Tells the game to start.
  */
 function startGame() {
-	airconsole.message(AirConsole.SCREEN, {MOVE: 'none', START: true})
+	airconsole.message(AirConsole.SCREEN, { MOVE: 'none', START: true })
 }
 
 function controllerColorChange(css_class: string) {
-	let leftButton = <HTMLElement>document.body.querySelector(".left");
-	let rightButton = <HTMLElement>document.body.querySelector(".right");
+	let leftButton = <HTMLElement>document.body.querySelector('.left')
+	let rightButton = <HTMLElement>document.body.querySelector('.right')
 	if (leftButton && rightButton) {
 		leftButton.classList.add(css_class)
 		rightButton.classList.add(css_class)
@@ -66,14 +66,14 @@ airconsole.onMessage = (from, data: GameUpdates) => {
 	if (data.joinedState) {
 		if (data.joinedState) {
 			if (data.gameState) {
-				let startButton = <HTMLElement>document.body.querySelector("#start")
+				let startButton = <HTMLElement>document.body.querySelector('#start')
 				switch (data.gameState) {
-					case "game": {
+					case 'game': {
 						showElementOn(false, startButton)
-						break;
+						break
 					}
 					default:
-					case "lobby": {
+					case 'lobby': {
 						showElementOn(airconsole.getDeviceId() == airconsole.getMasterControllerDeviceId(), startButton)
 					}
 				}
@@ -83,23 +83,23 @@ airconsole.onMessage = (from, data: GameUpdates) => {
 			switch (data.character.toLowerCase()) {
 				case 'toucan': {
 					document.body.style.backgroundColor = 'black'
-					controllerColorChange("toucan");
+					controllerColorChange('toucan')
 					break
 				}
 				case 'duck': {
 					document.body.style.backgroundColor = 'yellow'
-					controllerColorChange("duck");
+					controllerColorChange('duck')
 					break
 				}
 				case 'flamingo': {
 					document.body.style.backgroundColor = 'pink'
-					controllerColorChange("flamingo");
+					controllerColorChange('flamingo')
 					break
 				}
 				case 'unicorn': {
 					document.body.style.background =
 						'linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red)'
-					controllerColorChange("unicorn");
+					controllerColorChange('unicorn')
 					break
 				}
 			}
@@ -108,14 +108,14 @@ airconsole.onMessage = (from, data: GameUpdates) => {
 }
 
 airconsole.onConnect = function (device_id) {
-	let startButton = <HTMLElement>document.body.querySelector("#start")
+	let startButton = <HTMLElement>document.body.querySelector('#start')
 	showElementOn(airconsole.getDeviceId() == airconsole.getMasterControllerDeviceId(), startButton)
 }
 
 function showElementOn(condition: boolean, element: HTMLElement) {
 	if (condition) {
-		element.style.display = "block"
+		element.style.display = 'block'
 	} else {
-		element.style.display = "none"
+		element.style.display = 'none'
 	}
 }

@@ -3,10 +3,17 @@ export interface PlayerInputs {
 	START?: boolean
 }
 
-export type Character = 'toucan' | 'flamingo' | 'unicorn' | 'duck'
+export interface CharacterProps {
+	name: CharacterName
+	scoreKey: string
+	texture: string
+	color: string
+}
+
+export type CharacterName = 'toucan' | 'flamingo' | 'unicorn' | 'duck'
 export interface GameUpdates {
 	joinedState: 'success' | 'full' | 'disconnected'
-	character?: Character
+	character?: CharacterName
 	gameState?: 'lobby' | 'game'
 }
 

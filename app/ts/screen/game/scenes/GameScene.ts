@@ -1,19 +1,7 @@
-import { Character, PlayerInputs, Score } from '../../../shared/common'
+import { CharacterName, PlayerInputs, Score } from '../../../shared/common'
 import {
-	FLAMINGO_CHARACTER_IMAGE,
-	TOUCAN_CHARACTER_IMAGE,
-	UNICORN_CHARACTER_IMAGE,
-	DUCK_CHARACTER_IMAGE,
 	BACKGROUND_PATTERN_IMAGE,
-	UNICORN_CHARACTER,
-	DUCK_CHARACTER,
-	TOUCAN_CHARACTER,
-	FLAMINGO_CHARACTER,
 	DONUT_ITEM_IMAGE,
-	DUCK_SCORE_TEXT,
-	TOUCAN_SCORE_TEXT,
-	UNICORN_SCORE_TEXT,
-	FLAMINGO_SCORE_TEXT,
 	BOTTOM_RIGHT,
 	BOTTOM_LEFT,
 	TOP_RIGHT,
@@ -24,7 +12,7 @@ import {
 	STONES,
 	IMAGE_ARRAY,
 	SCHOKIBON_ITEM_IMAGE,
-	SIMPLE_SCHOKIBON_POINTS,
+	SCHOKIBON_POINTS,
 	HORSE_ITEM_IMAGE,
 	COUNTDOWN,
 	BACKGROUND_AUDIO,
@@ -32,14 +20,20 @@ import {
 	DONUT_AUDIO,
 	IAD_ITEM_IMAGE,
 	IAD_AUDIO,
+	FLAMINGO,
+	DUCK,
+	TOUCAN,
+	UNICORN,
+	DONUT_POINTS,
 } from '../../consts'
 import { SCENES } from '../config'
+import { Character } from '../objects/Character'
 
 export class GameScene extends Phaser.Scene {
 	private donuts: Phaser.GameObjects.Group | null = null
 	private schokibons: Phaser.GameObjects.Group | null = null
 	private horses: Phaser.GameObjects.Group | null = null
-	private playerCharacters: Phaser.GameObjects.Sprite[] = []
+	private playerCharacters: Character[] = []
 	private countdown: Phaser.GameObjects.Text | null = null
 	private iads: Phaser.GameObjects.Group | null = null
 
@@ -58,10 +52,10 @@ export class GameScene extends Phaser.Scene {
 				families: ['Luckiest Guy'],
 			},
 		})
-		this.load.image(FLAMINGO_CHARACTER_IMAGE, 'assets/flamingo.png')
-		this.load.image(TOUCAN_CHARACTER_IMAGE, 'assets/toucan.png')
-		this.load.image(UNICORN_CHARACTER_IMAGE, 'assets/unicorn.png')
-		this.load.image(DUCK_CHARACTER_IMAGE, 'assets/duck.png')
+		this.load.image(FLAMINGO.texture, 'assets/flamingo.png')
+		this.load.image(TOUCAN.texture, 'assets/toucan.png')
+		this.load.image(UNICORN.texture, 'assets/unicorn.png')
+		this.load.image(DUCK.texture, 'assets/duck.png')
 
 		this.load.image(HORSE_ITEM_IMAGE, 'assets/horse.png')
 		this.load.image(DONUT_ITEM_IMAGE, 'assets/donut.png')
@@ -87,107 +81,46 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	create(airconsole: AirConsole) {
+		this.sound.play(BACKGROUND_AUDIO, {
+			volume: 0.5,
+		})
+		this.drawBackground()
+
 		const sceneWidth = this.game.canvas.width
 		const sceneHeight = this.game.canvas.height
 
-		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
+		const sceneHorizontalCenter = sceneWidth / 2
+		const sceneVerticalCenter = sceneHeight / 2
 
-		this.sound.play(BACKGROUND_AUDIO)
-
-		for (let i = 0, y = 0; i < 3; i++) {
-			let x = 0
-			for (let j = 0; j < 12; j++) {
-				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9
-				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j % 3])
-			}
-			y += this.game.canvas.height / 3
-		}
-
-		this.add.image(10, 10, TOP_LEFT).setOrigin(0, 0)
-		this.add.image(10, sceneHeight - 175, BOTTOM_LEFT).setOrigin(0, 0)
-		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0, 0)
-		this.add.image(sceneWidth - 175, sceneHeight - 175, BOTTOM_RIGHT).setOrigin(0, 0)
-
-		const flamingo = this.initCharacter('flamingo')
-		const duck = this.initCharacter('duck')
-		const unicorn = this.initCharacter('unicorn')
-		const toucan = this.initCharacter('toucan')
-
-		flamingo.body.world.on(
-			'worldbounds',
-			(body: Phaser.Physics.Arcade.Body) => {
-				// Check if the body's game object is the sprite you are listening for
-				if (body.gameObject === flamingo) {
-					// update physics
-					flamingo.setAngularVelocity(this.getRandomAngularVelocity())
-					flamingo.body.velocity.x -= 300
-				}
-			},
-			flamingo
-		)
-
-		duck.body.world.on(
-			'worldbounds',
-			(body: Phaser.Physics.Arcade.Body) => {
-				// Check if the body's game object is the sprite you are listening for
-				if (body.gameObject === duck) {
-					// update physics
-					duck.setAngularVelocity(this.getRandomAngularVelocity())
-					duck.body.velocity.x -= 300
-				}
-			},
-			duck
-		)
-
-		unicorn.body.world.on(
-			'worldbounds',
-			(body: Phaser.Physics.Arcade.Body) => {
-				// Check if the body's game object is the sprite you are listening for
-				if (body.gameObject === unicorn) {
-					// update physics
-					unicorn.setAngularVelocity(this.getRandomAngularVelocity())
-					unicorn.body.velocity.x -= 300
-				}
-			},
-			unicorn
-		)
-
-		toucan.body.world.on(
-			'worldbounds',
-			(body: Phaser.Physics.Arcade.Body) => {
-				// Check if the body's game object is the sprite you are listening for
-				if (body.gameObject === toucan) {
-					// update physics
-					toucan.setAngularVelocity(this.getRandomAngularVelocity())
-					toucan.body.velocity.x -= 300
-				}
-			},
-			toucan
-		)
+		const flamingo = new Character(this, sceneHorizontalCenter - 300, sceneVerticalCenter, FLAMINGO)
+		const duck = new Character(this, sceneHorizontalCenter + 100, sceneVerticalCenter, DUCK)
+		const unicorn = new Character(this, sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN)
+		const toucan = new Character(this, sceneHorizontalCenter + 300, sceneVerticalCenter, TOUCAN)
 
 		const characters = this.add.group([flamingo, unicorn, duck, toucan])
+		this.playerCharacters = characters.getChildren() as Character[]
+
 		this.donuts = this.add.group()
 		this.schokibons = this.add.group()
 		this.horses = this.add.group()
 		this.iads = this.add.group()
 
-		this.playerCharacters = characters.getChildren() as Phaser.GameObjects.Sprite[]
-
 		this.physics.add.overlap(characters, this.donuts, (character, donut) => {
-			this.handleDonutCharacterCollisions(donut, character)
+			this.handleDonutCharacterCollisions(donut, character as Character)
 		})
-
 		this.physics.add.overlap(characters, this.schokibons, (character, schokibon) => {
-			this.handleSchokibonCharacterCollisions(schokibon, character)
+			this.handleSchokibonCharacterCollisions(schokibon, character as Character)
 		})
-
 		this.physics.add.collider(characters, this.iads, (character, iad) => {
-			this.handleIadCharacterCollision(iad, character)
-			this.updateScore(character.name as Character, -100)
+			this.handleIadCharacterCollision(iad, character as Character)
+		})
+		this.physics.add.overlap(characters, this.horses, (character, horse) => {
+			this.handleHorseCharacterOverlap(horse, character as Character)
 		})
 
-		this.physics.add.overlap(characters, this.horses, (character, horse) => {
-			this.handleHorseCharacterOverlap(horse, character)
+		this.physics.add.collider(characters, characters, (character1, character2) => {
+			character1.body.velocity.add({ x: Phaser.Math.Between(-50, 50), y: -75 })
+			character2.body.velocity.add({ x: Phaser.Math.Between(-50, 50), y: -75 })
 		})
 
 		airconsole.onConnect = (device_id) => {
@@ -200,7 +133,7 @@ export class GameScene extends Phaser.Scene {
 					character.setActive(true)
 					this.physics.world.enable(character)
 
-					airconsole.message(device_id, { joinedState: 'success', character: character.name as Character })
+					airconsole.message(device_id, { joinedState: 'success', character: character.name as CharacterName })
 					return
 				}
 			}
@@ -226,45 +159,40 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	handleIadCharacterCollision(
-		iad: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
-	) {
+	drawBackground() {
+		const sceneWidth = this.game.canvas.width
+		const sceneHeight = this.game.canvas.height
+
+		this.add.tileSprite(0, 0, sceneWidth, sceneHeight, BACKGROUND_PATTERN_IMAGE).setOrigin(0, 0)
+
+		for (let i = 0, y = 0; i < 3; i++) {
+			let x = 0
+			for (let j = 0; j < 12; j++) {
+				x += 60 + Math.floor(Math.random() * (this.game.canvas.width - 30 + 1) + 0) / 9
+				this.add.image(x, y + (Math.random() * (70 - 0 + 1) + 0), IMAGE_ARRAY[j % 3])
+			}
+			y += this.game.canvas.height / 3
+		}
+
+		this.add.image(10, 10, TOP_LEFT).setOrigin(0, 0)
+		this.add.image(10, sceneHeight - 175, BOTTOM_LEFT).setOrigin(0, 0)
+		this.add.image(sceneWidth - 175, 10, TOP_RIGHT).setOrigin(0, 0)
+		this.add.image(sceneWidth - 175, sceneHeight - 175, BOTTOM_RIGHT).setOrigin(0, 0)
+	}
+
+	handleIadCharacterCollision(iad: Phaser.Types.Physics.Arcade.GameObjectWithBody, character: Character) {
 		this.sound.play(IAD_AUDIO)
+		character.updateScore(-100)
 		iad.destroy()
 		character.body.velocity.x = 25
 		character.body.velocity.y = 0
 	}
 
 	onGameEnd(airconsole: AirConsole) {
-		const flamingoScore = {
-			character: FLAMINGO_CHARACTER,
-			score: this.children.getByName(FLAMINGO_SCORE_TEXT)?.getData('score') as number,
-			color: '#fa6493',
-		}
-		const toucanScore = {
-			character: TOUCAN_CHARACTER,
-			score: this.children.getByName(TOUCAN_SCORE_TEXT)?.getData('score') as number,
-			color: '#414545',
-		}
-
-		const unicornScore = {
-			character: UNICORN_CHARACTER,
-			score: this.children.getByName(UNICORN_SCORE_TEXT)?.getData('score') as number,
-			color: '#FFFFFF',
-		}
-
-		const duckScore = {
-			character: DUCK_CHARACTER,
-			score: this.children.getByName(DUCK_SCORE_TEXT)?.getData('score') as number,
-			color: '#f5e93c',
-		}
-
-		const scores: Score[] = [flamingoScore, toucanScore, unicornScore, duckScore]
-			.sort((a, b) => a.score - b.score)
+		const sortedCharactersByScore: Character[] = this.playerCharacters
+			.sort((a, b) => a.getScore() - b.getScore())
 			.reverse()
-
-		this.drawScoreBoard(scores)
+		this.drawScoreBoard(sortedCharactersByScore)
 		airconsole.message(airconsole.getMasterControllerDeviceId(), { joinedState: 'success', gameState: 'lobby' })
 	}
 
@@ -278,131 +206,9 @@ export class GameScene extends Phaser.Scene {
 		character.setScale(character.scale - 0.1)
 	}
 
-	initCharacter(character: Character) {
-		const sceneWidth = this.game.canvas.width
-		const sceneHeight = this.game.canvas.height
-
-		const sceneHorizontalCenter = sceneWidth / 2
-		const sceneVerticalCenter = sceneHeight / 2
-		switch (character) {
-			case 'duck': {
-				const duck = this.physics.add
-					.sprite(sceneHorizontalCenter + 100, sceneVerticalCenter, DUCK_CHARACTER_IMAGE)
-					.setScale(0.5)
-					.setName(DUCK_CHARACTER)
-					.setData('assigned', null)
-					.setVelocity(0, 0)
-					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setBounce(1, 1)
-					.setCollideWorldBounds(true)
-					.setVisible(false)
-					.setActive(false)
-					.disableBody(true)
-				return duck
-			}
-			case 'flamingo': {
-				const flamingo = this.physics.add
-					.sprite(sceneHorizontalCenter - 300, sceneVerticalCenter, FLAMINGO_CHARACTER_IMAGE)
-					.setScale(0.5)
-					.setName(FLAMINGO_CHARACTER)
-					.setData('assigned', null)
-					.setVelocity(0, 0)
-					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setBounce(1, 1)
-					.setCollideWorldBounds(true)
-					.setVisible(false)
-					.setActive(false)
-					.disableBody(true)
-				return flamingo
-			}
-			case 'unicorn': {
-				const unicorn = this.physics.add
-					.sprite(sceneHorizontalCenter - 100, sceneVerticalCenter, UNICORN_CHARACTER_IMAGE)
-					.setScale(0.5)
-					.setName(UNICORN_CHARACTER)
-					.setData('assigned', null)
-					.setVelocity(0, 0)
-					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setBounce(1, 1)
-					.setCollideWorldBounds(true)
-					.setVisible(false)
-					.setActive(false)
-					.disableBody(true)
-				return unicorn
-			}
-			case 'toucan': {
-				const toucan = this.physics.add
-					.sprite(sceneHorizontalCenter + 300, sceneVerticalCenter, TOUCAN_CHARACTER_IMAGE)
-					.setScale(0.5)
-					.setName(TOUCAN_CHARACTER)
-					.setData('assigned', null)
-					.setVelocity(0, 0)
-					.setAngularVelocity(this.getRandomAngularVelocity())
-					.setBounce(1, 1)
-					.setCollideWorldBounds(true)
-					.setVisible(false)
-					.setActive(false)
-					.disableBody(true)
-				return toucan
-			}
-		}
-	}
-
-	getRandomAngularVelocity() {
-		let velocity = [60, -60]
-		return velocity[Phaser.Math.Between(0, 1)]
-	}
-
-	updateScore(characterName: Character, points: number) {
-		switch (characterName) {
-			case 'toucan': {
-				const text = this.children.getByName(TOUCAN_SCORE_TEXT) as Phaser.GameObjects.Text
-				let newScore = text?.getData('score') + points
-				if (newScore < 0) {
-					newScore = 0
-				}
-				text.setData('score', text?.getData('score') + points)
-				text.setText('Toucan: ' + newScore)
-				break
-			}
-			case 'duck': {
-				const text = this.children.getByName(DUCK_SCORE_TEXT) as Phaser.GameObjects.Text
-				let newScore = text?.getData('score') + points
-				if (newScore < 0) {
-					newScore = 0
-				}
-				text.setData('score', text?.getData('score') + points)
-				text.setText('Duck: ' + newScore)
-				break
-			}
-			case 'flamingo': {
-				const text = this.children.getByName(FLAMINGO_SCORE_TEXT) as Phaser.GameObjects.Text
-				let newScore = text?.getData('score') + points
-				if (newScore < 0) {
-					newScore = 0
-				}
-				text.setData('score', text?.getData('score') + points)
-				text.setText('Flamingo: ' + newScore)
-				break
-			}
-			case 'unicorn': {
-				const text = this.children.getByName(UNICORN_SCORE_TEXT) as Phaser.GameObjects.Text
-				let newScore = text?.getData('score') + points
-				if (newScore < 0) {
-					newScore = 0
-				}
-				text.setData('score', text?.getData('score') + points)
-				text.setText('Unicorn: ' + newScore)
-				break
-			}
-		}
-	}
-
-	handleDonutCharacterCollisions(
-		donut: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
-	) {
+	handleDonutCharacterCollisions(donut: Phaser.Types.Physics.Arcade.GameObjectWithBody, character: Character) {
 		this.sound.play(DONUT_AUDIO)
+
 		donut.destroy()
 		this.upscaleCharacter(character as Phaser.GameObjects.Sprite)
 
@@ -411,16 +217,14 @@ export class GameScene extends Phaser.Scene {
 			callback: () => this.downscaleCharacter(character as Phaser.GameObjects.Sprite),
 			loop: false,
 		})
-		this.updateScore(character.name as Character, 1)
+		character.updateScore(DONUT_POINTS)
 	}
 
-	handleSchokibonCharacterCollisions(
-		schokibon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-		character: Phaser.Types.Physics.Arcade.GameObjectWithBody
-	) {
+	handleSchokibonCharacterCollisions(schokibon: Phaser.Types.Physics.Arcade.GameObjectWithBody, character: Character) {
 		this.sound.play(SCHOKIBON_AUDIO)
+
 		schokibon.destroy()
-		this.updateScore(character.name as Character, SIMPLE_SCHOKIBON_POINTS)
+		character.updateScore(DONUT_POINTS)
 	}
 
 	handleHorseCharacterOverlap(
@@ -514,82 +318,87 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	drawScores() {
+		const padding = 90
+
+		const [topLeftX, topLeftY] = [padding, padding]
+		const [topRightX, topRightY] = [this.game.canvas.width - padding, padding]
+		const [bottomLeftX, bottomLeftY] = [padding, this.game.canvas.height - padding]
+		const [bottomRightX, bottomRightY] = [this.game.canvas.width - padding, this.game.canvas.height - padding]
+
 		this.add
-			.text(70, 70, 'Flamingo: 0', {
+			.text(topLeftX, topLeftY, `${FLAMINGO.name}: 0`, {
 				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: '#fa6493',
-				align: 'left',
+				fontSize: '42px',
+				color: FLAMINGO.color,
 			})
-			.setName(FLAMINGO_SCORE_TEXT)
+			.setName(FLAMINGO.scoreKey)
 			.setData('score', 0)
 			.setResolution(3)
+			.setOrigin(0, 0)
+
 		this.add
-			.text(70, this.game.canvas.height - 70, 'Duck: 0', {
+			.text(topRightX, topRightY, `${DUCK.name}: 0`, {
 				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: '#f5e93c',
-				align: 'left',
+				fontSize: '42px',
+				color: DUCK.color,
 			})
-			.setName(DUCK_SCORE_TEXT)
+			.setName(DUCK.scoreKey)
 			.setData('score', 0)
-			.setOrigin(0, 1)
 			.setResolution(3)
-		this.add
-			.text(this.game.canvas.width - 70, 70, 'Toucan: 0', {
-				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: '#414545',
-				align: 'left',
-			})
-			.setName(TOUCAN_SCORE_TEXT)
-			.setData('score', 0)
 			.setOrigin(1, 0)
-			.setResolution(3)
+
 		this.add
-			.text(this.game.canvas.width - 70, this.game.canvas.height - 70, 'Unicorn: 0', {
+			.text(bottomLeftX, bottomLeftY, `${TOUCAN.name}: 0`, {
 				fontFamily: 'Luckiest Guy',
-				fontSize: '48px',
-				color: '#FFFFFF',
-				align: 'left',
+				fontSize: '42px',
+				color: TOUCAN.color,
 			})
-			.setName(UNICORN_SCORE_TEXT)
+			.setName(TOUCAN.scoreKey)
 			.setData('score', 0)
-			.setOrigin(1, 1)
 			.setResolution(3)
+			.setOrigin(0, 1)
+
+		this.add
+			.text(bottomRightX, bottomRightY, `${UNICORN.name}: 0`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '42px',
+				color: UNICORN.color,
+			})
+			.setName(UNICORN.scoreKey)
+			.setData('score', 0)
+			.setResolution(3)
+			.setOrigin(1, 1)
 	}
 
-	drawScoreBoard(scores: Score[]) {
-		this.add.text(this.game.canvas.width / 2 - 100, 150, `HIGHSCORES`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '65px',
-			color: '#FFFFFF',
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2 - 100, 250, `${scores[0].character}: ${scores[0].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: `${scores[0].color}`,
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2 - 100, 300, `${scores[1].character}: ${scores[1].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: `${scores[1].color}`,
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2 - 100, 350, `${scores[2].character}: ${scores[2].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: `${scores[2].color}`,
-			align: 'left',
-		})
-		this.add.text(this.game.canvas.width / 2 - 100, 400, `${scores[3].character}: ${scores[3].score}`, {
-			fontFamily: 'Luckiest Guy',
-			fontSize: '48px',
-			color: `${scores[3].color}`,
-			align: 'left',
-		})
+	drawScoreBoard(characters: Character[]) {
+		const horizontalCenter = this.game.canvas.width / 2
+		const verticalPaddingInBetween = 100
+
+		let yPosition = 150
+
+		// TITLE
+		this.add
+			.text(horizontalCenter, yPosition, `HIGHSCORES`, {
+				fontFamily: 'Luckiest Guy',
+				fontSize: '65px',
+				color: '#FFFFFF',
+				align: 'center',
+			})
+			.setOrigin(0.5, 0)
+		yPosition += verticalPaddingInBetween
+
+		// SCOREBOARD ENTRIES
+		for (const character of characters) {
+			this.add
+				.text(horizontalCenter, yPosition, `${character.name}: ${character.getScore()}`, {
+					fontFamily: 'Luckiest Guy',
+					fontSize: '48px',
+					color: character.props.color,
+					align: 'center',
+				})
+				.setOrigin(0.5, 0)
+			yPosition += verticalPaddingInBetween
+		}
 	}
 
 	setStartCharacterPosition() {
@@ -597,13 +406,13 @@ export class GameScene extends Phaser.Scene {
 		const sceneHorizontalCenter = sceneWidth / 2
 		const startLanesY = this.game.canvas.height * 0.8
 
-		const flamingo = this.children.getByName(FLAMINGO_CHARACTER) as Phaser.GameObjects.Sprite
+		const flamingo = this.children.getByName(FLAMINGO.name) as Phaser.GameObjects.Sprite
 		flamingo.setPosition(sceneHorizontalCenter - 300, startLanesY).setScale(0.5)
-		const unicorn = this.children.getByName(UNICORN_CHARACTER) as Phaser.GameObjects.Sprite
+		const unicorn = this.children.getByName(UNICORN.name) as Phaser.GameObjects.Sprite
 		unicorn.setPosition(sceneHorizontalCenter - 100, startLanesY).setScale(0.5)
-		const duck = this.children.getByName(DUCK_CHARACTER) as Phaser.GameObjects.Sprite
+		const duck = this.children.getByName(DUCK.name) as Phaser.GameObjects.Sprite
 		duck.setPosition(sceneHorizontalCenter + 100, startLanesY).setScale(0.5)
-		const toucan = this.children.getByName(TOUCAN_CHARACTER) as Phaser.GameObjects.Sprite
+		const toucan = this.children.getByName(TOUCAN.name) as Phaser.GameObjects.Sprite
 		toucan.setPosition(sceneHorizontalCenter + 300, startLanesY).setScale(0.5)
 	}
 
@@ -625,7 +434,7 @@ export class GameScene extends Phaser.Scene {
 		this.drawScores()
 
 		this.time.addEvent({
-			delay: 180000, // 180000 3 min
+			delay: 180000, // 3 min
 			callback: () => this.onGameEnd(airconsole),
 		})
 
@@ -642,10 +451,8 @@ export class GameScene extends Phaser.Scene {
 		})
 
 		this.time.addEvent({
-			delay: 2000, // ms
+			delay: 2000,
 			callback: () => this.spawnSchokibon(),
-			//args: [],
-			// callbackScope: thisArg,
 			loop: true,
 		})
 
